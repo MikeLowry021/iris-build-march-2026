@@ -15,6 +15,7 @@ import UploadStatements from "./pages/client/UploadStatements";
 import Transactions from "./pages/client/Transactions";
 import FinancialStatements from "./pages/client/FinancialStatements";
 import AccountantDashboard from "./pages/accountant/AccountantDashboard";
+import ClientReview from "./pages/accountant/ClientReview";
 
 const queryClient = new QueryClient();
 
@@ -79,6 +80,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute allowedRole="accountant">
             <AccountantDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/accountant/clients/:clientId"
+        element={
+          <ProtectedRoute allowedRole="accountant">
+            <ClientReview />
           </ProtectedRoute>
         }
       />
