@@ -195,11 +195,9 @@ export default function FinancialStatements() {
             </div>
             <div className="flex gap-2">
               <Select onValueChange={(value) => handleExportPDF(value as 'all' | 'balance-sheet' | 'profit-loss')}>
-                <SelectTrigger asChild>
-                  <Button variant="outline">
-                    <Download className="h-4 w-4 mr-2" />
-                    Export PDF
-                  </Button>
+                <SelectTrigger className="w-auto border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 rounded-md">
+                  <Download className="h-4 w-4 mr-2" />
+                  <span>Export PDF</span>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Full Report</SelectItem>
