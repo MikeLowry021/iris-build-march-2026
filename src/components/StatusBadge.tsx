@@ -6,9 +6,10 @@ interface StatusBadgeProps {
   status: StatusType | string;
   showIcon?: boolean;
   className?: string;
+  label?: string;
 }
 
-export function StatusBadge({ status, showIcon = true, className }: StatusBadgeProps) {
+export function StatusBadge({ status, showIcon = true, className, label }: StatusBadgeProps) {
   const getStatusConfig = (status: string) => {
     switch (status) {
       case 'complete':
@@ -54,7 +55,7 @@ export function StatusBadge({ status, showIcon = true, className }: StatusBadgeP
   return (
     <span className={cn('status-badge', config.className, className)}>
       {showIcon && <Icon className="h-3 w-3" />}
-      {config.label}
+      {label || config.label}
     </span>
   );
 }
