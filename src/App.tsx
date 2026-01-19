@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import ClientDashboard from "./pages/client/ClientDashboard";
 import UploadStatements from "./pages/client/UploadStatements";
 import Transactions from "./pages/client/Transactions";
+import FinancialStatements from "./pages/client/FinancialStatements";
 import AccountantDashboard from "./pages/accountant/AccountantDashboard";
 
 const queryClient = new QueryClient();
@@ -60,6 +61,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute allowedRole="client">
             <Transactions />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/client/financials"
+        element={
+          <ProtectedRoute allowedRole="client">
+            <FinancialStatements />
           </ProtectedRoute>
         }
       />
