@@ -161,9 +161,10 @@ export default function Login() {
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djItSDI0di0yaDEyek0zNiAzMHYySDI0di0yaDEyek0zNiAyNnYySDI0di0yaDEyeiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
           <div className="absolute inset-0 flex flex-col items-center justify-center px-12 text-center">
             <div className="max-w-md">
-              <h2 className="text-3xl font-bold text-white">
-                Professional Accounting Made Simple
-              </h2>
+            <h2 className="text-3xl font-bold text-white">
+              Professional Accounting,<br />
+              Made Simple.
+            </h2>
               <p className="mt-4 text-lg text-white/80">
                 Streamline your bookkeeping, VAT returns, and tax compliance with AuditNex — 
                 built for South African businesses.
