@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserRole } from '@/lib/types';
-import { Building2, User, Loader2, ArrowRight } from 'lucide-react';
+import { Building2, User, Loader2, ArrowRight, BookOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function Login() {
@@ -32,7 +32,12 @@ export default function Login() {
     try {
       const success = await login(email, password, selectedRole);
       if (success) {
-        navigate(selectedRole === 'accountant' ? '/accountant' : '/client');
+        const redirectPath = selectedRole === 'accountant' 
+          ? '/accountant' 
+          : selectedRole === 'bookkeeper' 
+            ? '/bookkeeper' 
+            : '/client';
+        navigate(redirectPath);
       }
     } catch (err) {
       setError('Login failed. Please try again.');
@@ -64,12 +69,12 @@ export default function Login() {
             {/* Role selection */}
             <div className="mb-6">
               <Label className="text-sm font-medium">I am a</Label>
-              <div className="mt-2 grid grid-cols-2 gap-3">
+              <div className="mt-2 grid grid-cols-3 gap-3">
                 <button
                   type="button"
                   onClick={() => setSelectedRole('client')}
                   className={cn(
-                    'flex items-center justify-center gap-2 rounded-lg border-2 p-3 text-sm font-medium transition-all duration-200',
+                    'flex flex-col items-center justify-center gap-1 rounded-lg border-2 p-3 text-sm font-medium transition-all duration-200',
                     selectedRole === 'client'
                       ? 'border-primary bg-primary/5 text-primary'
                       : 'border-border bg-background text-muted-foreground hover:border-primary/50 hover:bg-accent'
@@ -80,9 +85,22 @@ export default function Login() {
                 </button>
                 <button
                   type="button"
+                  onClick={() => setSelectedRole('bookkeeper')}
+                  className={cn(
+                    'flex flex-col items-center justify-center gap-1 rounded-lg border-2 p-3 text-sm font-medium transition-all duration-200',
+                    selectedRole === 'bookkeeper'
+                      ? 'border-primary bg-primary/5 text-primary'
+                      : 'border-border bg-background text-muted-foreground hover:border-primary/50 hover:bg-accent'
+                  )}
+                >
+                  <BookOpen className="h-5 w-5" />
+                  Bookkeeper
+                </button>
+                <button
+                  type="button"
                   onClick={() => setSelectedRole('accountant')}
                   className={cn(
-                    'flex items-center justify-center gap-2 rounded-lg border-2 p-3 text-sm font-medium transition-all duration-200',
+                    'flex flex-col items-center justify-center gap-1 rounded-lg border-2 p-3 text-sm font-medium transition-all duration-200',
                     selectedRole === 'accountant'
                       ? 'border-primary bg-primary/5 text-primary'
                       : 'border-border bg-background text-muted-foreground hover:border-primary/50 hover:bg-accent'

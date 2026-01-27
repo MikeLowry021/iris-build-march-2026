@@ -15,6 +15,13 @@ export const mockUsers: User[] = [
     role: 'accountant',
     company: 'AuditNex Partners',
   },
+  {
+    id: '3',
+    email: 'bookkeeper@example.com',
+    name: 'Linda Dlamini',
+    role: 'bookkeeper',
+    company: 'AuditNex Partners',
+  },
 ];
 
 export const mockClientStatusCards: StatusCard[] = [

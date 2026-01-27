@@ -51,13 +51,24 @@ const accountantNavItems: NavItem[] = [
   { label: 'Payroll', href: '/accountant/payroll', icon: Wallet },
 ];
 
+const bookkeeperNavItems: NavItem[] = [
+  { label: 'Dashboard', href: '/bookkeeper', icon: LayoutDashboard },
+  { label: 'Categorize', href: '/bookkeeper/clients/1/categorize', icon: Receipt },
+  { label: 'Adjusting Entries', href: '/bookkeeper/clients/1/adjusting-entries', icon: FileText },
+  { label: 'Draft Reports', href: '/bookkeeper/clients/1/draft-reports', icon: ClipboardCheck },
+];
+
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const navItems = user?.role === 'accountant' ? accountantNavItems : clientNavItems;
+  const navItems = user?.role === 'accountant' 
+    ? accountantNavItems 
+    : user?.role === 'bookkeeper' 
+      ? bookkeeperNavItems 
+      : clientNavItems;
 
   const handleLogout = () => {
     logout();
@@ -153,7 +164,11 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
               <Menu className="h-5 w-5" />
             </Button>
             <div className="hidden text-sm text-muted-foreground lg:block">
-              {user?.role === 'accountant' ? 'Accountant Portal' : 'Client Portal'}
+              {user?.role === 'accountant' 
+                ? 'Accountant Portal' 
+                : user?.role === 'bookkeeper' 
+                  ? 'Bookkeeper Portal' 
+                  : 'Client Portal'}
             </div>
           </div>
 
