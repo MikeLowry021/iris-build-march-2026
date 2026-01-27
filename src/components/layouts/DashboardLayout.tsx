@@ -28,6 +28,9 @@ import {
   Menu,
   X,
   ChevronRight,
+  Building2,
+  Shield,
+  Activity,
 } from 'lucide-react';
 
 interface NavItem {
@@ -58,17 +61,27 @@ const bookkeeperNavItems: NavItem[] = [
   { label: 'Draft Reports', href: '/bookkeeper/clients/1/draft-reports', icon: ClipboardCheck },
 ];
 
+const adminNavItems: NavItem[] = [
+  { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+  { label: 'Clients', href: '/admin/manage-clients', icon: Building2 },
+  { label: 'Bookkeepers', href: '/admin/manage-bookkeepers', icon: Users },
+  { label: 'Audit Logs', href: '/admin/audit-logs', icon: Activity },
+  { label: 'Settings', href: '/admin/settings', icon: Settings },
+];
+
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const navItems = user?.role === 'accountant' 
-    ? accountantNavItems 
-    : user?.role === 'bookkeeper' 
-      ? bookkeeperNavItems 
-      : clientNavItems;
+  const navItems = user?.role === 'admin'
+    ? adminNavItems
+    : user?.role === 'accountant' 
+      ? accountantNavItems 
+      : user?.role === 'bookkeeper' 
+        ? bookkeeperNavItems 
+        : clientNavItems;
 
   const handleLogout = () => {
     logout();
@@ -164,11 +177,13 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
               <Menu className="h-5 w-5" />
             </Button>
             <div className="hidden text-sm text-muted-foreground lg:block">
-              {user?.role === 'accountant' 
-                ? 'Accountant Portal' 
-                : user?.role === 'bookkeeper' 
-                  ? 'Bookkeeper Portal' 
-                  : 'Client Portal'}
+              {user?.role === 'admin'
+                ? 'System Administration'
+                : user?.role === 'accountant' 
+                  ? 'Accountant Portal' 
+                  : user?.role === 'bookkeeper' 
+                    ? 'Bookkeeper Portal' 
+                    : 'Client Portal'}
             </div>
           </div>
 

@@ -20,11 +20,16 @@ import BookkeeperDashboard from "./pages/bookkeeper/BookkeeperDashboard";
 import TransactionCategorization from "./pages/bookkeeper/TransactionCategorization";
 import AdjustingEntries from "./pages/bookkeeper/AdjustingEntries";
 import DraftReports from "./pages/bookkeeper/DraftReports";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import BookkeeperManagement from "./pages/admin/BookkeeperManagement";
+import ClientManagement from "./pages/admin/ClientManagement";
+import SystemSettings from "./pages/admin/SystemSettings";
+import AuditLogs from "./pages/admin/AuditLogs";
 
 const queryClient = new QueryClient();
 
 // Protected route wrapper
-function ProtectedRoute({ children, allowedRole }: { children: React.ReactNode; allowedRole?: 'client' | 'accountant' | 'bookkeeper' }) {
+function ProtectedRoute({ children, allowedRole }: { children: React.ReactNode; allowedRole?: 'client' | 'accountant' | 'bookkeeper' | 'admin' }) {
   const { isAuthenticated, user } = useAuth();
 
   if (!isAuthenticated) {
@@ -32,11 +37,13 @@ function ProtectedRoute({ children, allowedRole }: { children: React.ReactNode; 
   }
 
   if (allowedRole && user?.role !== allowedRole) {
-    const redirectPath = user?.role === 'accountant' 
-      ? '/accountant' 
-      : user?.role === 'bookkeeper' 
-        ? '/bookkeeper' 
-        : '/client';
+    const redirectPath = user?.role === 'admin'
+      ? '/admin'
+      : user?.role === 'accountant' 
+        ? '/accountant' 
+        : user?.role === 'bookkeeper' 
+          ? '/bookkeeper' 
+          : '/client';
     return <Navigate to={redirectPath} replace />;
   }
 
@@ -131,6 +138,48 @@ function AppRoutes() {
         element={
           <ProtectedRoute allowedRole="bookkeeper">
             <DraftReports />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin routes */}
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute allowedRole="admin">
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/manage-bookkeepers"
+        element={
+          <ProtectedRoute allowedRole="admin">
+            <BookkeeperManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/manage-clients"
+        element={
+          <ProtectedRoute allowedRole="admin">
+            <ClientManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/settings"
+        element={
+          <ProtectedRoute allowedRole="admin">
+            <SystemSettings />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/audit-logs"
+        element={
+          <ProtectedRoute allowedRole="admin">
+            <AuditLogs />
           </ProtectedRoute>
         }
       />
