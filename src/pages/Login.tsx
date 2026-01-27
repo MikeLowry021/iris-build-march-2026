@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserRole } from '@/lib/types';
-import { Building2, User, Loader2, ArrowRight, BookOpen } from 'lucide-react';
+import { Building2, User, Loader2, ArrowRight, BookOpen, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function Login() {
@@ -32,11 +32,13 @@ export default function Login() {
     try {
       const success = await login(email, password, selectedRole);
       if (success) {
-        const redirectPath = selectedRole === 'accountant' 
-          ? '/accountant' 
-          : selectedRole === 'bookkeeper' 
-            ? '/bookkeeper' 
-            : '/client';
+        const redirectPath = selectedRole === 'admin'
+          ? '/admin'
+          : selectedRole === 'accountant' 
+            ? '/accountant' 
+            : selectedRole === 'bookkeeper' 
+              ? '/bookkeeper' 
+              : '/client';
         navigate(redirectPath);
       }
     } catch (err) {
@@ -69,7 +71,7 @@ export default function Login() {
             {/* Role selection */}
             <div className="mb-6">
               <Label className="text-sm font-medium">I am a</Label>
-              <div className="mt-2 grid grid-cols-3 gap-3">
+              <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
                 <button
                   type="button"
                   onClick={() => setSelectedRole('client')}
@@ -108,6 +110,19 @@ export default function Login() {
                 >
                   <Building2 className="h-5 w-5" />
                   Accountant
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedRole('admin')}
+                  className={cn(
+                    'flex flex-col items-center justify-center gap-1 rounded-lg border-2 p-3 text-sm font-medium transition-all duration-200',
+                    selectedRole === 'admin'
+                      ? 'border-primary bg-primary/5 text-primary'
+                      : 'border-border bg-background text-muted-foreground hover:border-primary/50 hover:bg-accent'
+                  )}
+                >
+                  <Shield className="h-5 w-5" />
+                  Admin
                 </button>
               </div>
             </div>
