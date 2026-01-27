@@ -16,11 +16,15 @@ import Transactions from "./pages/client/Transactions";
 import FinancialStatements from "./pages/client/FinancialStatements";
 import AccountantDashboard from "./pages/accountant/AccountantDashboard";
 import ClientReview from "./pages/accountant/ClientReview";
+import BookkeeperDashboard from "./pages/bookkeeper/BookkeeperDashboard";
+import TransactionCategorization from "./pages/bookkeeper/TransactionCategorization";
+import AdjustingEntries from "./pages/bookkeeper/AdjustingEntries";
+import DraftReports from "./pages/bookkeeper/DraftReports";
 
 const queryClient = new QueryClient();
 
 // Protected route wrapper
-function ProtectedRoute({ children, allowedRole }: { children: React.ReactNode; allowedRole?: 'client' | 'accountant' }) {
+function ProtectedRoute({ children, allowedRole }: { children: React.ReactNode; allowedRole?: 'client' | 'accountant' | 'bookkeeper' }) {
   const { isAuthenticated, user } = useAuth();
 
   if (!isAuthenticated) {
@@ -28,7 +32,12 @@ function ProtectedRoute({ children, allowedRole }: { children: React.ReactNode; 
   }
 
   if (allowedRole && user?.role !== allowedRole) {
-    return <Navigate to={user?.role === 'accountant' ? '/accountant' : '/client'} replace />;
+    const redirectPath = user?.role === 'accountant' 
+      ? '/accountant' 
+      : user?.role === 'bookkeeper' 
+        ? '/bookkeeper' 
+        : '/client';
+    return <Navigate to={redirectPath} replace />;
   }
 
   return <>{children}</>;
@@ -88,6 +97,40 @@ function AppRoutes() {
         element={
           <ProtectedRoute allowedRole="accountant">
             <ClientReview />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Bookkeeper routes */}
+      <Route
+        path="/bookkeeper"
+        element={
+          <ProtectedRoute allowedRole="bookkeeper">
+            <BookkeeperDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/bookkeeper/clients/:clientId/categorize"
+        element={
+          <ProtectedRoute allowedRole="bookkeeper">
+            <TransactionCategorization />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/bookkeeper/clients/:clientId/adjusting-entries"
+        element={
+          <ProtectedRoute allowedRole="bookkeeper">
+            <AdjustingEntries />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/bookkeeper/clients/:clientId/draft-reports"
+        element={
+          <ProtectedRoute allowedRole="bookkeeper">
+            <DraftReports />
           </ProtectedRoute>
         }
       />
