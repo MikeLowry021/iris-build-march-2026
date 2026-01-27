@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { JeromeProvider } from "@/contexts/JeromeContext";
+import { JeromeAssistant } from "@/components/jerome";
 
 // Pages
 import Index from "./pages/Index";
@@ -190,6 +192,18 @@ function AppRoutes() {
   );
 }
 
+function AppWithJerome() {
+  const { isAuthenticated } = useAuth();
+  
+  return (
+    <>
+      <AppRoutes />
+      {/* Jerome appears on all authenticated pages */}
+      {isAuthenticated && <JeromeAssistant />}
+    </>
+  );
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
@@ -198,7 +212,9 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <AppRoutes />
+            <JeromeProvider>
+              <AppWithJerome />
+            </JeromeProvider>
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>

@@ -1,0 +1,9 @@
+export { JeromeAssistant } from './JeromeAssistant';
+export { JeromeAvatar } from './JeromeAvatar';
+export { JeromeButton } from './JeromeButton';
+export { JeromePanel } from './JeromePanel';
+export { JeromeChatWidget } from './JeromeChatWidget';
+export { JeromeGuidancePanel } from './JeromeGuidancePanel';
+export { JeromeTipsPanel } from './JeromeTipsPanel';
+export { JeromeSettingsPanel } from './JeromeSettingsPanel';
+export { JeromeAutoSign } from './JeromeAutoSign';
