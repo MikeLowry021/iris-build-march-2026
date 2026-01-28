@@ -1,4 +1,4 @@
-export type UserRole = 'client' | 'accountant' | 'bookkeeper' | 'admin';
+export type UserRole = 'client' | 'accountant' | 'bookkeeper' | 'admin' | 'ceo';
 
 export interface User {
   id: string;
