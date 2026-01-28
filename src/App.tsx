@@ -13,6 +13,7 @@ import { UserRole } from "@/lib/types";
 // Pages
 import Index from "./pages/Index";
 import Login from "./pages/Login";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 // Client pages
@@ -338,7 +339,7 @@ function AppRoutes() {
         path="/settings"
         element={
           <ProtectedRoute>
-            <ClientDashboard />
+            <Settings />
           </ProtectedRoute>
         }
       />
