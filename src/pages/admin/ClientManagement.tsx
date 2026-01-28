@@ -260,7 +260,7 @@ export default function ClientManagement() {
         <Card>
           <CardHeader>
             <CardTitle>All Clients</CardTitle>
-            <CardDescription>View and manage all client accounts</CardDescription>
+            <CardDescription>View and manage all client accounts (financial data not accessible to admin)</CardDescription>
           </CardHeader>
           <CardContent>
             {/* Filters */}
@@ -313,7 +313,7 @@ export default function ClientManagement() {
               </div>
             )}
 
-            {/* Table */}
+            {/* Table - NO financial data columns (admin privacy requirement) */}
             <div className="rounded-md border">
               <Table>
                 <TableHeader>
@@ -373,7 +373,6 @@ export default function ClientManagement() {
                               View Details
                             </DropdownMenuItem>
                             <DropdownMenuItem>Assign Bookkeeper</DropdownMenuItem>
-                            <DropdownMenuItem>View Financials</DropdownMenuItem>
                             <DropdownMenuItem>Export Data</DropdownMenuItem>
                             <DropdownMenuItem className="text-destructive">
                               {client.status === 'active' ? 'Deactivate' : 'Activate'}
