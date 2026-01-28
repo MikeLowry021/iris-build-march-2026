@@ -7,21 +7,31 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { JeromeProvider } from "@/contexts/JeromeContext";
 import { JeromeAssistant } from "@/components/jerome";
+import { getDashboardPathForRole } from "@/lib/navigation-config";
+import { UserRole } from "@/lib/types";
 
 // Pages
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+
+// Client pages
 import ClientDashboard from "./pages/client/ClientDashboard";
 import UploadStatements from "./pages/client/UploadStatements";
 import Transactions from "./pages/client/Transactions";
 import FinancialStatements from "./pages/client/FinancialStatements";
+
+// Accountant pages
 import AccountantDashboard from "./pages/accountant/AccountantDashboard";
 import ClientReview from "./pages/accountant/ClientReview";
+
+// Bookkeeper pages
 import BookkeeperDashboard from "./pages/bookkeeper/BookkeeperDashboard";
 import TransactionCategorization from "./pages/bookkeeper/TransactionCategorization";
 import AdjustingEntries from "./pages/bookkeeper/AdjustingEntries";
 import DraftReports from "./pages/bookkeeper/DraftReports";
+
+// Admin pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import BookkeeperManagement from "./pages/admin/BookkeeperManagement";
 import ClientManagement from "./pages/admin/ClientManagement";
@@ -31,23 +41,23 @@ import JeromeAdmin from "./pages/admin/JeromeAdmin";
 
 const queryClient = new QueryClient();
 
-// Protected route wrapper
-function ProtectedRoute({ children, allowedRole }: { children: React.ReactNode; allowedRole?: 'client' | 'accountant' | 'bookkeeper' | 'admin' }) {
+// Protected route wrapper with role-based access control
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+  allowedRoles?: UserRole[];
+}
+
+function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
   const { isAuthenticated, user } = useAuth();
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  if (allowedRole && user?.role !== allowedRole) {
-    const redirectPath = user?.role === 'admin'
-      ? '/admin'
-      : user?.role === 'accountant' 
-        ? '/accountant' 
-        : user?.role === 'bookkeeper' 
-          ? '/bookkeeper' 
-          : '/client';
-    return <Navigate to={redirectPath} replace />;
+  // If specific roles are required, check access
+  if (allowedRoles && user?.role && !allowedRoles.includes(user.role)) {
+    // Redirect to user's own dashboard
+    return <Navigate to={getDashboardPathForRole(user.role)} replace />;
   }
 
   return <>{children}</>;
@@ -63,7 +73,7 @@ function AppRoutes() {
       <Route
         path="/client"
         element={
-          <ProtectedRoute allowedRole="client">
+          <ProtectedRoute allowedRoles={['client']}>
             <ClientDashboard />
           </ProtectedRoute>
         }
@@ -71,7 +81,7 @@ function AppRoutes() {
       <Route
         path="/client/upload"
         element={
-          <ProtectedRoute allowedRole="client">
+          <ProtectedRoute allowedRoles={['client']}>
             <UploadStatements />
           </ProtectedRoute>
         }
@@ -79,7 +89,7 @@ function AppRoutes() {
       <Route
         path="/client/transactions"
         element={
-          <ProtectedRoute allowedRole="client">
+          <ProtectedRoute allowedRoles={['client']}>
             <Transactions />
           </ProtectedRoute>
         }
@@ -87,8 +97,40 @@ function AppRoutes() {
       <Route
         path="/client/financials"
         element={
-          <ProtectedRoute allowedRole="client">
+          <ProtectedRoute allowedRoles={['client']}>
             <FinancialStatements />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/client/tax-status"
+        element={
+          <ProtectedRoute allowedRoles={['client']}>
+            <ClientDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/client/payslips"
+        element={
+          <ProtectedRoute allowedRoles={['client']}>
+            <ClientDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/client/reports"
+        element={
+          <ProtectedRoute allowedRoles={['client']}>
+            <ClientDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/client/help"
+        element={
+          <ProtectedRoute allowedRoles={['client']}>
+            <ClientDashboard />
           </ProtectedRoute>
         }
       />
@@ -97,7 +139,15 @@ function AppRoutes() {
       <Route
         path="/accountant"
         element={
-          <ProtectedRoute allowedRole="accountant">
+          <ProtectedRoute allowedRoles={['accountant']}>
+            <AccountantDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/accountant/clients"
+        element={
+          <ProtectedRoute allowedRoles={['accountant']}>
             <AccountantDashboard />
           </ProtectedRoute>
         }
@@ -105,8 +155,64 @@ function AppRoutes() {
       <Route
         path="/accountant/clients/:clientId"
         element={
-          <ProtectedRoute allowedRole="accountant">
+          <ProtectedRoute allowedRoles={['accountant']}>
             <ClientReview />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/accountant/review"
+        element={
+          <ProtectedRoute allowedRoles={['accountant']}>
+            <AccountantDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/accountant/it14sd"
+        element={
+          <ProtectedRoute allowedRoles={['accountant']}>
+            <AccountantDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/accountant/sign-off"
+        element={
+          <ProtectedRoute allowedRoles={['accountant']}>
+            <AccountantDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/accountant/audit-trail"
+        element={
+          <ProtectedRoute allowedRoles={['accountant']}>
+            <AccountantDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/accountant/reports"
+        element={
+          <ProtectedRoute allowedRoles={['accountant']}>
+            <AccountantDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/accountant/settings"
+        element={
+          <ProtectedRoute allowedRoles={['accountant']}>
+            <AccountantDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/accountant/help"
+        element={
+          <ProtectedRoute allowedRoles={['accountant']}>
+            <AccountantDashboard />
           </ProtectedRoute>
         }
       />
@@ -115,7 +221,15 @@ function AppRoutes() {
       <Route
         path="/bookkeeper"
         element={
-          <ProtectedRoute allowedRole="bookkeeper">
+          <ProtectedRoute allowedRoles={['bookkeeper']}>
+            <BookkeeperDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/bookkeeper/clients"
+        element={
+          <ProtectedRoute allowedRoles={['bookkeeper']}>
             <BookkeeperDashboard />
           </ProtectedRoute>
         }
@@ -123,7 +237,7 @@ function AppRoutes() {
       <Route
         path="/bookkeeper/clients/:clientId/categorize"
         element={
-          <ProtectedRoute allowedRole="bookkeeper">
+          <ProtectedRoute allowedRoles={['bookkeeper']}>
             <TransactionCategorization />
           </ProtectedRoute>
         }
@@ -131,7 +245,7 @@ function AppRoutes() {
       <Route
         path="/bookkeeper/clients/:clientId/adjusting-entries"
         element={
-          <ProtectedRoute allowedRole="bookkeeper">
+          <ProtectedRoute allowedRoles={['bookkeeper']}>
             <AdjustingEntries />
           </ProtectedRoute>
         }
@@ -139,8 +253,16 @@ function AppRoutes() {
       <Route
         path="/bookkeeper/clients/:clientId/draft-reports"
         element={
-          <ProtectedRoute allowedRole="bookkeeper">
+          <ProtectedRoute allowedRoles={['bookkeeper']}>
             <DraftReports />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/bookkeeper/help"
+        element={
+          <ProtectedRoute allowedRoles={['bookkeeper']}>
+            <BookkeeperDashboard />
           </ProtectedRoute>
         }
       />
@@ -149,31 +271,31 @@ function AppRoutes() {
       <Route
         path="/admin"
         element={
-          <ProtectedRoute allowedRole="admin">
+          <ProtectedRoute allowedRoles={['admin']}>
             <AdminDashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/manage-bookkeepers"
-        element={
-          <ProtectedRoute allowedRole="admin">
-            <BookkeeperManagement />
           </ProtectedRoute>
         }
       />
       <Route
         path="/admin/manage-clients"
         element={
-          <ProtectedRoute allowedRole="admin">
+          <ProtectedRoute allowedRoles={['admin']}>
             <ClientManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/manage-bookkeepers"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <BookkeeperManagement />
           </ProtectedRoute>
         }
       />
       <Route
         path="/admin/settings"
         element={
-          <ProtectedRoute allowedRole="admin">
+          <ProtectedRoute allowedRoles={['admin']}>
             <SystemSettings />
           </ProtectedRoute>
         }
@@ -181,16 +303,42 @@ function AppRoutes() {
       <Route
         path="/admin/audit-logs"
         element={
-          <ProtectedRoute allowedRole="admin">
+          <ProtectedRoute allowedRoles={['admin']}>
             <AuditLogs />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/backup-security"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/reports"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <AdminDashboard />
           </ProtectedRoute>
         }
       />
       <Route
         path="/admin/jerome"
         element={
-          <ProtectedRoute allowedRole="admin">
+          <ProtectedRoute allowedRoles={['admin']}>
             <JeromeAdmin />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Global settings route */}
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <ClientDashboard />
           </ProtectedRoute>
         }
       />

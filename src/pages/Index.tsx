@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { getDashboardPathForRole } from '@/lib/navigation-config';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -8,7 +9,7 @@ const Index = () => {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      navigate(user.role === 'accountant' ? '/accountant' : '/client');
+      navigate(getDashboardPathForRole(user.role));
     } else {
       navigate('/login');
     }

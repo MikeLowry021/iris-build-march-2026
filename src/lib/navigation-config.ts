@@ -1,0 +1,113 @@
+import {
+  LayoutDashboard,
+  Upload,
+  Receipt,
+  FileText,
+  Calculator,
+  FileSpreadsheet,
+  HelpCircle,
+  Users,
+  ClipboardCheck,
+  BookOpen,
+  Building2,
+  Shield,
+  Activity,
+  Settings,
+  Database,
+  Bot,
+  PenTool,
+  FileCheck,
+  BarChart3,
+} from 'lucide-react';
+import { UserRole } from '@/lib/types';
+
+export interface NavItem {
+  label: string;
+  href: string;
+  icon: React.ElementType;
+}
+
+export const clientNavItems: NavItem[] = [
+  { label: 'Dashboard', href: '/client', icon: LayoutDashboard },
+  { label: 'Upload Statements', href: '/client/upload', icon: Upload },
+  { label: 'My Transactions', href: '/client/transactions', icon: Receipt },
+  { label: 'Financials', href: '/client/financials', icon: FileText },
+  { label: 'Tax Status', href: '/client/tax-status', icon: Calculator },
+  { label: 'Payslips', href: '/client/payslips', icon: FileSpreadsheet },
+  { label: 'Reports', href: '/client/reports', icon: BarChart3 },
+  { label: 'Help', href: '/client/help', icon: HelpCircle },
+];
+
+export const bookkeeperNavItems: NavItem[] = [
+  { label: 'Dashboard', href: '/bookkeeper', icon: LayoutDashboard },
+  { label: 'Assigned Clients', href: '/bookkeeper/clients', icon: Users },
+  { label: 'Categorize Transactions', href: '/bookkeeper/clients/1/categorize', icon: Receipt },
+  { label: 'Adjusting Entries', href: '/bookkeeper/clients/1/adjusting-entries', icon: BookOpen },
+  { label: 'Draft Reports', href: '/bookkeeper/clients/1/draft-reports', icon: ClipboardCheck },
+  { label: 'Help', href: '/bookkeeper/help', icon: HelpCircle },
+];
+
+export const accountantNavItems: NavItem[] = [
+  { label: 'Dashboard', href: '/accountant', icon: LayoutDashboard },
+  { label: 'All Clients', href: '/accountant/clients', icon: Users },
+  { label: 'Review Financials', href: '/accountant/review', icon: FileCheck },
+  { label: 'IT14SD Reconciliation', href: '/accountant/it14sd', icon: Calculator },
+  { label: 'Sign-Off', href: '/accountant/sign-off', icon: PenTool },
+  { label: 'Audit Trail', href: '/accountant/audit-trail', icon: Activity },
+  { label: 'Reports', href: '/accountant/reports', icon: BarChart3 },
+  { label: 'Settings', href: '/accountant/settings', icon: Settings },
+  { label: 'Help', href: '/accountant/help', icon: HelpCircle },
+];
+
+export const adminNavItems: NavItem[] = [
+  { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+  { label: 'Manage Clients', href: '/admin/manage-clients', icon: Building2 },
+  { label: 'Manage Bookkeepers', href: '/admin/manage-bookkeepers', icon: Users },
+  { label: 'Jerome AI', href: '/admin/jerome', icon: Bot },
+  { label: 'System Settings', href: '/admin/settings', icon: Settings },
+  { label: 'Audit Logs', href: '/admin/audit-logs', icon: Activity },
+  { label: 'Backup & Security', href: '/admin/backup-security', icon: Database },
+  { label: 'Reports', href: '/admin/reports', icon: BarChart3 },
+];
+
+export function getNavItemsForRole(role: UserRole | undefined): NavItem[] {
+  switch (role) {
+    case 'admin':
+      return adminNavItems;
+    case 'accountant':
+      return accountantNavItems;
+    case 'bookkeeper':
+      return bookkeeperNavItems;
+    case 'client':
+    default:
+      return clientNavItems;
+  }
+}
+
+export function getPortalLabelForRole(role: UserRole | undefined): string {
+  switch (role) {
+    case 'admin':
+      return 'Admin Portal';
+    case 'accountant':
+      return 'Accountant Portal';
+    case 'bookkeeper':
+      return 'Bookkeeper Portal';
+    case 'client':
+    default:
+      return 'Client Portal';
+  }
+}
+
+export function getDashboardPathForRole(role: UserRole | undefined): string {
+  switch (role) {
+    case 'admin':
+      return '/admin';
+    case 'accountant':
+      return '/accountant';
+    case 'bookkeeper':
+      return '/bookkeeper';
+    case 'client':
+    default:
+      return '/client';
+  }
+}
