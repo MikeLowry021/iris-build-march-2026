@@ -7,6 +7,7 @@ import { JeromeChatWidget } from './JeromeChatWidget';
 import { JeromeGuidancePanel } from './JeromeGuidancePanel';
 import { JeromeTipsPanel } from './JeromeTipsPanel';
 import { JeromeSettingsPanel } from './JeromeSettingsPanel';
+import { JeromeNotificationBell } from './JeromeNotificationBell';
 
 export function JeromePanel() {
   const { isOpen, activeTab, setActiveTab, currentGuidance } = useJerome();
@@ -32,6 +33,7 @@ export function JeromePanel() {
             AI Assistant • Powered by Dr. Swartz's expertise
           </p>
         </div>
+        <JeromeNotificationBell />
       </div>
 
       {/* Tabs */}

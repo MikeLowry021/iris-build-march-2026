@@ -3,7 +3,6 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   Bell, 
@@ -11,11 +10,11 @@ import {
   PenTool, 
   Mail, 
   Clock,
-  Settings 
+  Mic,
 } from 'lucide-react';
 
 export function JeromeSettingsPanel() {
-  const { settings, updateSettings } = useJerome();
+  const { settings, updateSettings, isVoiceEnabled, setIsVoiceEnabled } = useJerome();
 
   return (
     <ScrollArea className="h-full">
@@ -187,6 +186,31 @@ export function JeromeSettingsPanel() {
                 <Label htmlFor="evening" className="text-sm">Evening (6:00 PM)</Label>
               </div>
             </RadioGroup>
+          </CardContent>
+        </Card>
+
+        {/* Voice Features */}
+        <Card>
+          <CardHeader className="pb-3 pt-4 px-4">
+            <div className="flex items-center gap-2">
+              <Mic className="h-4 w-4 text-primary" />
+              <CardTitle className="text-sm">Voice Features</CardTitle>
+            </div>
+            <CardDescription className="text-xs">
+              Enable voice input and text-to-speech (requires API key)
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="px-4 pb-4">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="voice-enabled" className="text-sm">
+                Enable voice features
+              </Label>
+              <Switch
+                id="voice-enabled"
+                checked={isVoiceEnabled}
+                onCheckedChange={setIsVoiceEnabled}
+              />
+            </div>
           </CardContent>
         </Card>
       </div>

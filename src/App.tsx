@@ -27,6 +27,7 @@ import BookkeeperManagement from "./pages/admin/BookkeeperManagement";
 import ClientManagement from "./pages/admin/ClientManagement";
 import SystemSettings from "./pages/admin/SystemSettings";
 import AuditLogs from "./pages/admin/AuditLogs";
+import JeromeAdmin from "./pages/admin/JeromeAdmin";
 
 const queryClient = new QueryClient();
 
@@ -182,6 +183,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute allowedRole="admin">
             <AuditLogs />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/jerome"
+        element={
+          <ProtectedRoute allowedRole="admin">
+            <JeromeAdmin />
           </ProtectedRoute>
         }
       />

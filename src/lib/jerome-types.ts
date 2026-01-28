@@ -35,6 +35,7 @@ export interface JeromeChatMessage {
   role: 'user' | 'jerome';
   content: string;
   timestamp: Date;
+  isStreaming?: boolean;
 }
 
 export interface JeromeQuickReply {

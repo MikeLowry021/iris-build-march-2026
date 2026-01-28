@@ -7,3 +7,6 @@ export { JeromeGuidancePanel } from './JeromeGuidancePanel';
 export { JeromeTipsPanel } from './JeromeTipsPanel';
 export { JeromeSettingsPanel } from './JeromeSettingsPanel';
 export { JeromeAutoSign } from './JeromeAutoSign';
+export { JeromeTypingIndicator } from './JeromeTypingIndicator';
+export { JeromeVoiceControls, JeromeSpeakerButton } from './JeromeVoiceControls';
+export { JeromeNotificationBell } from './JeromeNotificationBell';

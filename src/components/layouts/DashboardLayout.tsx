@@ -31,6 +31,7 @@ import {
   Building2,
   Shield,
   Activity,
+  Bot,
 } from 'lucide-react';
 
 interface NavItem {
@@ -65,6 +66,7 @@ const adminNavItems: NavItem[] = [
   { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { label: 'Clients', href: '/admin/manage-clients', icon: Building2 },
   { label: 'Bookkeepers', href: '/admin/manage-bookkeepers', icon: Users },
+  { label: 'Jerome AI', href: '/admin/jerome', icon: Bot },
   { label: 'Audit Logs', href: '/admin/audit-logs', icon: Activity },
   { label: 'Settings', href: '/admin/settings', icon: Settings },
 ];
