@@ -20,7 +20,8 @@ import NotFound from "./pages/NotFound";
 import ClientDashboard from "./pages/client/ClientDashboard";
 import UploadStatements from "./pages/client/UploadStatements";
 import Transactions from "./pages/client/Transactions";
-import FinancialStatements from "./pages/client/FinancialStatements";
+import ClientFinancials from "./pages/client/ClientFinancials";
+import Payslips from "./pages/client/Payslips";
 
 // Accountant pages
 import AccountantDashboard from "./pages/accountant/AccountantDashboard";
@@ -99,20 +100,20 @@ function AppRoutes() {
         path="/client/financials"
         element={
           <ProtectedRoute allowedRoles={['client']}>
-            <FinancialStatements />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/client/tax-status"
-        element={
-          <ProtectedRoute allowedRoles={['client']}>
-            <ClientDashboard />
+            <ClientFinancials />
           </ProtectedRoute>
         }
       />
       <Route
         path="/client/payslips"
+        element={
+          <ProtectedRoute allowedRoles={['client']}>
+            <Payslips />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/client/tax-status"
         element={
           <ProtectedRoute allowedRoles={['client']}>
             <ClientDashboard />
@@ -136,7 +137,6 @@ function AppRoutes() {
         }
       />
 
-      {/* Accountant routes */}
       <Route
         path="/accountant"
         element={
