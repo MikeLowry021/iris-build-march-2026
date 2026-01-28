@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import {
   Table,
   TableBody,
@@ -35,15 +36,19 @@ import {
   Search,
   MoreHorizontal,
   Settings,
-  FileText,
   ClipboardList,
   Download,
   UserPlus,
   CheckCircle,
   Clock,
   AlertTriangle,
+  FileCheck,
+  AlertCircle,
+  TrendingUp,
+  Bot,
+  BarChart3,
 } from 'lucide-react';
-import { mockAdminClients, mockBookkeepers, mockSystemHealth, mockAuditLogs, formatCurrency } from '@/lib/admin-mock-data';
+import { mockAdminClients, mockBookkeepers, mockSystemHealth, mockAuditLogs } from '@/lib/admin-mock-data';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -55,6 +60,13 @@ export default function AdminDashboard() {
   const totalClients = mockAdminClients.length;
   const totalUsers = mockAdminClients.length + mockBookkeepers.length + 2; // + accountant + admin
   const activeProjects = mockAdminClients.filter(c => c.status === 'active').length;
+
+  // Admin cannot see financial data - privacy requirement
+  // Instead show submission status
+  const pendingSubmissions = 5; // Mock data
+  const overdueSubmissions = 2; // Mock data
+  const totalSubmissionsThisMonth = 48;
+  const avgSubmissionTime = 5; // days
 
   const filteredClients = mockAdminClients.filter(client => {
     const matchesSearch = client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -103,8 +115,22 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Metrics Cards */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* System Health Alert */}
+        {overdueSubmissions > 0 && (
+          <div className="flex items-center gap-3 rounded-lg border border-destructive/50 bg-destructive/10 p-4">
+            <AlertCircle className="h-5 w-5 text-destructive" />
+            <div className="flex-1">
+              <p className="font-medium text-destructive">{overdueSubmissions} submissions overdue</p>
+              <p className="text-sm text-muted-foreground">Action required: Review pending submissions</p>
+            </div>
+            <Button variant="outline" size="sm" onClick={() => navigate('/admin/manage-clients')}>
+              View Details
+            </Button>
+          </div>
+        )}
+
+        {/* Metrics Cards - Admin sees operational metrics, NOT financial data */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Total Clients</CardTitle>
@@ -131,16 +157,27 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-blue-500/20 bg-blue-500/5">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Active Projects</CardTitle>
-              <Activity className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Pending Review</CardTitle>
+              <Clock className="h-4 w-4 text-blue-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{activeProjects}</div>
-              <p className="text-xs text-muted-foreground">
-                With recent activity this week
-              </p>
+              <div className="text-2xl font-bold text-blue-600">{pendingSubmissions}</div>
+              <p className="text-xs text-muted-foreground">Awaiting action</p>
+            </CardContent>
+          </Card>
+
+          <Card className={overdueSubmissions > 0 ? "border-destructive/20 bg-destructive/5" : ""}>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Overdue</CardTitle>
+              <AlertTriangle className={`h-4 w-4 ${overdueSubmissions > 0 ? 'text-destructive' : 'text-muted-foreground'}`} />
+            </CardHeader>
+            <CardContent>
+              <div className={`text-2xl font-bold ${overdueSubmissions > 0 ? 'text-destructive' : ''}`}>
+                {overdueSubmissions}
+              </div>
+              <p className="text-xs text-muted-foreground">Requires attention</p>
             </CardContent>
           </Card>
 
@@ -154,15 +191,62 @@ export default function AdminDashboard() {
                 <CheckCircle className="h-5 w-5 text-green-500" />
                 <span className="text-2xl font-bold capitalize">{mockSystemHealth.status}</span>
               </div>
-              <p className="text-xs text-muted-foreground">
-                {mockSystemHealth.uptime} uptime • Last backup: {mockSystemHealth.lastBackup}
-              </p>
+              <p className="text-xs text-muted-foreground">{mockSystemHealth.uptime} uptime</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Performance Stats */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Submissions This Month</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{totalSubmissionsThisMonth}</div>
+              <div className="mt-2 flex items-center gap-1 text-xs text-green-600">
+                <TrendingUp className="h-3 w-3" />
+                <span>12% vs last month</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Avg. Turnaround</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{avgSubmissionTime} days</div>
+              <p className="text-xs text-muted-foreground">Bookkeeper + Accountant</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Storage Used</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{mockSystemHealth.storageUsed}%</div>
+              <Progress value={mockSystemHealth.storageUsed} className="mt-2" />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Last Backup</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span className="text-lg font-medium">{mockSystemHealth.lastBackup}</span>
+              </div>
+              <p className="text-xs text-muted-foreground">Automated daily</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Quick Links */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           <Button
             variant="outline"
             className="h-auto flex-col gap-2 p-4"
@@ -187,6 +271,14 @@ export default function AdminDashboard() {
             <ClipboardList className="h-6 w-6" />
             <span>View Audit Logs</span>
           </Button>
+          <Button
+            variant="outline"
+            className="h-auto flex-col gap-2 p-4"
+            onClick={() => navigate('/admin/jerome')}
+          >
+            <Bot className="h-6 w-6" />
+            <span>Jerome AI</span>
+          </Button>
           <Button variant="outline" className="h-auto flex-col gap-2 p-4">
             <Download className="h-6 w-6" />
             <span>Export Reports</span>
@@ -194,11 +286,11 @@ export default function AdminDashboard() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
-          {/* Client Table */}
+          {/* Client Table - No financial data visible to admin */}
           <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle>All Clients</CardTitle>
-              <CardDescription>Manage and monitor all clients in the system</CardDescription>
+              <CardDescription>Manage and monitor all clients in the system (no financial data)</CardDescription>
             </CardHeader>
             <CardContent>
               {/* Filters */}
@@ -245,7 +337,7 @@ export default function AdminDashboard() {
                 </div>
               )}
 
-              {/* Table */}
+              {/* Table - NO VAT/PAYE columns (privacy) */}
               <div className="rounded-md border">
                 <Table>
                   <TableHeader>
@@ -260,8 +352,7 @@ export default function AdminDashboard() {
                       <TableHead>Bookkeeper</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Last Activity</TableHead>
-                      <TableHead className="text-right">VAT (Month)</TableHead>
-                      <TableHead className="text-right">PAYE (Month)</TableHead>
+                      <TableHead>Created</TableHead>
                       <TableHead className="w-12"></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -291,12 +382,7 @@ export default function AdminDashboard() {
                           </Badge>
                         </TableCell>
                         <TableCell className="text-muted-foreground">{client.lastActivity}</TableCell>
-                        <TableCell className="text-right font-medium">
-                          {formatCurrency(client.vatTotalThisMonth)}
-                        </TableCell>
-                        <TableCell className="text-right font-medium">
-                          {formatCurrency(client.payeTotalThisMonth)}
-                        </TableCell>
+                        <TableCell className="text-muted-foreground">{client.createdAt}</TableCell>
                         <TableCell onClick={(e) => e.stopPropagation()}>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -332,7 +418,7 @@ export default function AdminDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>Latest actions across all clients</CardDescription>
+              <CardDescription>Latest actions across all users</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
