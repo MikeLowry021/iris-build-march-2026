@@ -4,20 +4,50 @@ import { Logo } from '@/components/Logo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserRole } from '@/lib/types';
-import { Building2, User, Loader2, ArrowRight, BookOpen, Shield } from 'lucide-react';
+import { 
+  Building2, 
+  User, 
+  Loader2, 
+  ArrowRight, 
+  BookOpen, 
+  Shield,
+  Bot,
+  Mail,
+  Lock
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Separator } from '@/components/ui/separator';
+
+const demoProfiles: { role: UserRole; label: string; icon: React.ElementType; email: string }[] = [
+  { role: 'client', label: 'Client', icon: User, email: 'client@iris.demo' },
+  { role: 'bookkeeper', label: 'Bookkeeper', icon: BookOpen, email: 'bookkeeper@iris.demo' },
+  { role: 'accountant', label: 'Accountant', icon: Building2, email: 'accountant@iris.demo' },
+  { role: 'admin', label: 'CEO/Admin', icon: Shield, email: 'admin@iris.demo' },
+];
 
 export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [selectedRole, setSelectedRole] = useState<UserRole>('client');
+  const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingRole, setLoadingRole] = useState<UserRole | null>(null);
   const [error, setError] = useState('');
+
+  const getRedirectPath = (role: UserRole): string => {
+    switch (role) {
+      case 'admin': return '/admin';
+      case 'accountant': return '/accountant';
+      case 'bookkeeper': return '/bookkeeper';
+      case 'client': return '/client';
+      default: return '/client';
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,21 +60,37 @@ export default function Login() {
 
     setIsLoading(true);
     try {
-      const success = await login(email, password, selectedRole);
+      // For demo, detect role from email
+      let role: UserRole = 'client';
+      if (email.includes('admin')) role = 'admin';
+      else if (email.includes('accountant')) role = 'accountant';
+      else if (email.includes('bookkeeper')) role = 'bookkeeper';
+      
+      const success = await login(email, password, role);
       if (success) {
-        const redirectPath = selectedRole === 'admin'
-          ? '/admin'
-          : selectedRole === 'accountant' 
-            ? '/accountant' 
-            : selectedRole === 'bookkeeper' 
-              ? '/bookkeeper' 
-              : '/client';
-        navigate(redirectPath);
+        navigate(getRedirectPath(role));
       }
     } catch (err) {
       setError('Login failed. Please try again.');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDemoLogin = async (role: UserRole) => {
+    setError('');
+    setLoadingRole(role);
+    
+    try {
+      const profile = demoProfiles.find(p => p.role === role);
+      const success = await login(profile?.email || `${role}@iris.demo`, 'demo123', role);
+      if (success) {
+        navigate(getRedirectPath(role));
+      }
+    } catch (err) {
+      setError('Demo login failed. Please try again.');
+    } finally {
+      setLoadingRole(null);
     }
   };
 
@@ -68,90 +114,53 @@ export default function Login() {
           </div>
 
           <div className="mt-8">
-            {/* Role selection */}
-            <div className="mb-6">
-              <Label className="text-sm font-medium">I am a</Label>
-              <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                <button
-                  type="button"
-                  onClick={() => setSelectedRole('client')}
-                  className={cn(
-                    'flex flex-col items-center justify-center gap-1 rounded-lg border-2 p-3 text-sm font-medium transition-all duration-200',
-                    selectedRole === 'client'
-                      ? 'border-primary bg-primary/5 text-primary'
-                      : 'border-border bg-background text-muted-foreground hover:border-primary/50 hover:bg-accent'
-                  )}
-                >
-                  <User className="h-5 w-5" />
-                  Client
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedRole('bookkeeper')}
-                  className={cn(
-                    'flex flex-col items-center justify-center gap-1 rounded-lg border-2 p-3 text-sm font-medium transition-all duration-200',
-                    selectedRole === 'bookkeeper'
-                      ? 'border-primary bg-primary/5 text-primary'
-                      : 'border-border bg-background text-muted-foreground hover:border-primary/50 hover:bg-accent'
-                  )}
-                >
-                  <BookOpen className="h-5 w-5" />
-                  Bookkeeper
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedRole('accountant')}
-                  className={cn(
-                    'flex flex-col items-center justify-center gap-1 rounded-lg border-2 p-3 text-sm font-medium transition-all duration-200',
-                    selectedRole === 'accountant'
-                      ? 'border-primary bg-primary/5 text-primary'
-                      : 'border-border bg-background text-muted-foreground hover:border-primary/50 hover:bg-accent'
-                  )}
-                >
-                  <Building2 className="h-5 w-5" />
-                  Accountant
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedRole('admin')}
-                  className={cn(
-                    'flex flex-col items-center justify-center gap-1 rounded-lg border-2 p-3 text-sm font-medium transition-all duration-200',
-                    selectedRole === 'admin'
-                      ? 'border-primary bg-primary/5 text-primary'
-                      : 'border-border bg-background text-muted-foreground hover:border-primary/50 hover:bg-accent'
-                  )}
-                >
-                  <Shield className="h-5 w-5" />
-                  Admin
-                </button>
-              </div>
-            </div>
-
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <Label htmlFor="email">Email address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="you@company.co.za"
-                  className="mt-1.5"
-                  autoComplete="email"
-                />
+                <div className="relative mt-1.5">
+                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="you@company.co.za"
+                    className="pl-10"
+                    autoComplete="email"
+                  />
+                </div>
               </div>
 
               <div>
                 <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="mt-1.5"
-                  autoComplete="current-password"
-                />
+                <div className="relative mt-1.5">
+                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="pl-10"
+                    autoComplete="current-password"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="remember"
+                    checked={rememberMe}
+                    onCheckedChange={(checked) => setRememberMe(checked === true)}
+                  />
+                  <Label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer">
+                    Remember me
+                  </Label>
+                </div>
+                <a href="#" className="text-sm font-medium text-primary hover:underline">
+                  Forgot password?
+                </a>
               </div>
 
               {error && (
@@ -178,6 +187,48 @@ export default function Login() {
               </Button>
             </form>
 
+            {/* Demo Profiles Section */}
+            <div className="mt-8">
+              <div className="relative">
+                <Separator />
+                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-3 text-xs text-muted-foreground">
+                  Demo Profiles
+                </span>
+              </div>
+
+              <p className="mt-6 text-center text-xs text-muted-foreground mb-4">
+                Quick access for demonstration purposes
+              </p>
+
+              <div className="grid grid-cols-2 gap-3">
+                {demoProfiles.map((profile) => {
+                  const Icon = profile.icon;
+                  const isLoadingThis = loadingRole === profile.role;
+                  
+                  return (
+                    <button
+                      key={profile.role}
+                      type="button"
+                      onClick={() => handleDemoLogin(profile.role)}
+                      disabled={loadingRole !== null}
+                      className={cn(
+                        'flex items-center justify-center gap-2 rounded-lg border-2 border-border p-3 text-sm font-medium transition-all duration-200',
+                        'bg-background text-muted-foreground hover:border-primary/50 hover:bg-accent hover:text-foreground',
+                        'disabled:opacity-50 disabled:cursor-not-allowed'
+                      )}
+                    >
+                      {isLoadingThis ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Icon className="h-4 w-4" />
+                      )}
+                      {profile.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             <p className="mt-6 text-center text-sm text-muted-foreground">
               Don't have an account?{' '}
               <a href="#" className="font-medium text-primary hover:underline">
@@ -194,10 +245,10 @@ export default function Login() {
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djItSDI0di0yaDEyek0zNiAzMHYySDI0di0yaDEyek0zNiAyNnYySDI0di0yaDEyeiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
           <div className="absolute inset-0 flex flex-col items-center justify-center px-12 text-center">
             <div className="max-w-md">
-            <h2 className="text-3xl font-bold text-white">
-              Professional Accounting,<br />
-              Made Simple.
-            </h2>
+              <h2 className="text-3xl font-bold text-white">
+                Professional Accounting,<br />
+                Made Simple.
+              </h2>
               <p className="mt-4 text-lg text-white/80">
                 Streamline your bookkeeping, VAT returns, and tax compliance with AuditNex — 
                 built for South African businesses.

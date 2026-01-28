@@ -3,28 +3,28 @@ import { Client, User, StatusCard, Transaction, BankStatement } from './types';
 export const mockUsers: User[] = [
   {
     id: '1',
-    email: 'client@example.com',
+    email: 'client@iris.demo',
     name: 'John Mokwena',
     role: 'client',
     company: 'Mokwena Trading (Pty) Ltd',
   },
   {
     id: '2',
-    email: 'accountant@example.com',
+    email: 'accountant@iris.demo',
     name: 'Sarah van der Berg',
     role: 'accountant',
     company: 'AuditNex Partners',
   },
   {
     id: '3',
-    email: 'bookkeeper@example.com',
+    email: 'bookkeeper@iris.demo',
     name: 'Linda Dlamini',
     role: 'bookkeeper',
     company: 'AuditNex Partners',
   },
   {
     id: '4',
-    email: 'admin@example.com',
+    email: 'admin@iris.demo',
     name: 'Dr. Pieter van Niekerk',
     role: 'admin',
     company: 'AuditNex Partners',

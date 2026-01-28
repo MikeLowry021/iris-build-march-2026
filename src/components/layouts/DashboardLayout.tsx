@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { Breadcrumbs } from '@/components/layouts/Breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -14,62 +15,16 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
+import { getNavItemsForRole, getPortalLabelForRole } from '@/lib/navigation-config';
 import {
-  LayoutDashboard,
-  Upload,
-  FileText,
-  Receipt,
-  Calculator,
-  Users,
-  ClipboardCheck,
-  Wallet,
-  Settings,
   LogOut,
   Menu,
   X,
   ChevronRight,
-  Building2,
-  Shield,
-  Activity,
-  Bot,
+  Settings,
+  UserCircle,
+  RefreshCw,
 } from 'lucide-react';
-
-interface NavItem {
-  label: string;
-  href: string;
-  icon: React.ElementType;
-}
-
-const clientNavItems: NavItem[] = [
-  { label: 'Dashboard', href: '/client', icon: LayoutDashboard },
-  { label: 'Upload Statements', href: '/client/upload', icon: Upload },
-  { label: 'Transactions', href: '/client/transactions', icon: Receipt },
-  { label: 'Financials', href: '/client/financials', icon: FileText },
-  { label: 'VAT', href: '/client/vat', icon: Calculator },
-];
-
-const accountantNavItems: NavItem[] = [
-  { label: 'Dashboard', href: '/accountant', icon: LayoutDashboard },
-  { label: 'Clients', href: '/accountant/clients', icon: Users },
-  { label: 'Reviews', href: '/accountant/reviews', icon: ClipboardCheck },
-  { label: 'Payroll', href: '/accountant/payroll', icon: Wallet },
-];
-
-const bookkeeperNavItems: NavItem[] = [
-  { label: 'Dashboard', href: '/bookkeeper', icon: LayoutDashboard },
-  { label: 'Categorize', href: '/bookkeeper/clients/1/categorize', icon: Receipt },
-  { label: 'Adjusting Entries', href: '/bookkeeper/clients/1/adjusting-entries', icon: FileText },
-  { label: 'Draft Reports', href: '/bookkeeper/clients/1/draft-reports', icon: ClipboardCheck },
-];
-
-const adminNavItems: NavItem[] = [
-  { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-  { label: 'Clients', href: '/admin/manage-clients', icon: Building2 },
-  { label: 'Bookkeepers', href: '/admin/manage-bookkeepers', icon: Users },
-  { label: 'Jerome AI', href: '/admin/jerome', icon: Bot },
-  { label: 'Audit Logs', href: '/admin/audit-logs', icon: Activity },
-  { label: 'Settings', href: '/admin/settings', icon: Settings },
-];
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
@@ -77,15 +32,15 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const navItems = user?.role === 'admin'
-    ? adminNavItems
-    : user?.role === 'accountant' 
-      ? accountantNavItems 
-      : user?.role === 'bookkeeper' 
-        ? bookkeeperNavItems 
-        : clientNavItems;
+  const navItems = getNavItemsForRole(user?.role);
+  const portalLabel = getPortalLabelForRole(user?.role);
 
   const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
+  const handleSwitchProfile = () => {
     logout();
     navigate('/login');
   };
@@ -97,6 +52,19 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       .join('')
       .toUpperCase()
       .slice(0, 2);
+  };
+
+  const getRoleBadgeColor = (role: string | undefined) => {
+    switch (role) {
+      case 'admin':
+        return 'bg-destructive/10 text-destructive';
+      case 'accountant':
+        return 'bg-primary/10 text-primary';
+      case 'bookkeeper':
+        return 'bg-secondary/10 text-secondary';
+      default:
+        return 'bg-accent text-accent-foreground';
+    }
   };
 
   return (
@@ -130,10 +98,18 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             </Button>
           </div>
 
+          {/* Portal label */}
+          <div className="border-b border-sidebar-border px-4 py-3">
+            <span className={cn('inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium', getRoleBadgeColor(user?.role))}>
+              {portalLabel}
+            </span>
+          </div>
+
           {/* Navigation */}
-          <nav className="flex-1 space-y-1 p-3">
+          <nav className="flex-1 space-y-1 overflow-y-auto p-3">
             {navItems.map(item => {
-              const isActive = location.pathname === item.href;
+              const isActive = location.pathname === item.href || 
+                (item.href !== '/' && location.pathname.startsWith(item.href) && item.href.split('/').length > 2);
               const Icon = item.icon;
 
               return (
@@ -151,25 +127,29 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             })}
           </nav>
 
-          {/* User section */}
+          {/* User section at bottom of sidebar */}
           <div className="border-t border-sidebar-border p-3">
-            <Link
-              to="/settings"
-              className="nav-link"
-              onClick={() => setSidebarOpen(false)}
-            >
-              <Settings className="h-5 w-5" />
-              Settings
-            </Link>
+            <div className="flex items-center gap-3 rounded-lg bg-sidebar-accent/50 p-3">
+              <Avatar className="h-9 w-9">
+                <AvatarFallback className="bg-primary/10 text-sm font-medium text-primary">
+                  {user ? getInitials(user.name) : 'U'}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">{user?.name}</p>
+                <p className="text-xs text-muted-foreground capitalize">{user?.role}</p>
+              </div>
+            </div>
           </div>
         </div>
       </aside>
 
       {/* Main content */}
       <div className="flex flex-1 flex-col">
-        {/* Header */}
+        {/* Top Navbar - Fixed */}
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:px-6">
-          <div className="flex items-center gap-3">
+          {/* Left: Menu button + Breadcrumbs */}
+          <div className="flex items-center gap-4">
             <Button
               variant="ghost"
               size="icon"
@@ -178,17 +158,15 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             >
               <Menu className="h-5 w-5" />
             </Button>
-            <div className="hidden text-sm text-muted-foreground lg:block">
-              {user?.role === 'admin'
-                ? 'System Administration'
-                : user?.role === 'accountant' 
-                  ? 'Accountant Portal' 
-                  : user?.role === 'bookkeeper' 
-                    ? 'Bookkeeper Portal' 
-                    : 'Client Portal'}
-            </div>
+            <Breadcrumbs />
           </div>
 
+          {/* Center: Empty for future search */}
+          <div className="hidden flex-1 justify-center lg:flex">
+            {/* Future search bar placeholder */}
+          </div>
+
+          {/* Right: Theme toggle + User menu */}
           <div className="flex items-center gap-2">
             <ThemeToggle />
             <DropdownMenu>
@@ -211,12 +189,24 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                     <span className="text-xs font-normal text-muted-foreground">
                       {user?.email}
                     </span>
+                    <span className={cn('mt-1 inline-flex w-fit items-center rounded-full px-2 py-0.5 text-xs font-medium', getRoleBadgeColor(user?.role))}>
+                      {user?.role?.charAt(0).toUpperCase()}{user?.role?.slice(1)}
+                    </span>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => navigate('/settings')}>
+                  <UserCircle className="mr-2 h-4 w-4" />
+                  Profile Settings
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/settings')}>
                   <Settings className="mr-2 h-4 w-4" />
-                  Settings
+                  Preferences
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSwitchProfile}>
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Switch Profile
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="text-destructive">
