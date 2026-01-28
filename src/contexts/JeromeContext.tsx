@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { 
   JeromeSettings, 
@@ -10,9 +10,9 @@ import {
   defaultJeromeSettings, 
   getGuidanceForRoute,
   getRandomTips,
-  jeromeQuickReplies,
-  findAnswerForQuestion
 } from '@/lib/jerome-mock-data';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface JeromeContextType {
   isOpen: boolean;
@@ -28,19 +28,23 @@ interface JeromeContextType {
   markGuidanceRead: () => void;
   activeTab: 'chat' | 'guidance' | 'tips' | 'settings';
   setActiveTab: (tab: 'chat' | 'guidance' | 'tips' | 'settings') => void;
+  isLoading: boolean;
+  isVoiceEnabled: boolean;
+  setIsVoiceEnabled: (enabled: boolean) => void;
 }
 
 const JeromeContext = createContext<JeromeContextType | undefined>(undefined);
 
 export function JeromeProvider({ children }: { children: React.ReactNode }) {
   const location = useLocation();
+  const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [settings, setSettings] = useState<JeromeSettings>(defaultJeromeSettings);
   const [chatMessages, setChatMessages] = useState<JeromeChatMessage[]>([
     {
       id: 'welcome',
       role: 'jerome',
-      content: "Hello! I'm Jerome, powered by Dr. Swartz's accounting expertise. I'm here to help with your accounting questions and provide contextual guidance. How can I assist you today?",
+      content: "Hello! I'm Jerome, powered by Dr. Swartz's accounting expertise. I'm here to help with your South African tax and accounting questions. How can I assist you today?",
       timestamp: new Date(),
     }
   ]);
@@ -48,6 +52,9 @@ export function JeromeProvider({ children }: { children: React.ReactNode }) {
   const [tips] = useState<JeromeTip[]>(getRandomTips(5));
   const [hasNewGuidance, setHasNewGuidance] = useState(false);
   const [activeTab, setActiveTab] = useState<'chat' | 'guidance' | 'tips' | 'settings'>('chat');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   // Update guidance when route changes
   useEffect(() => {
@@ -62,7 +69,12 @@ export function JeromeProvider({ children }: { children: React.ReactNode }) {
     setSettings(prev => ({ ...prev, ...newSettings }));
   }, []);
 
-  const sendMessage = useCallback((message: string) => {
+  const sendMessage = useCallback(async (message: string) => {
+    // Cancel any ongoing request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
     // Add user message
     const userMessage: JeromeChatMessage = {
       id: `user-${Date.now()}`,
@@ -72,46 +84,138 @@ export function JeromeProvider({ children }: { children: React.ReactNode }) {
     };
     setChatMessages(prev => [...prev, userMessage]);
 
-    // Find answer from quick replies or generate a default response
-    setTimeout(() => {
-      const quickReply = findAnswerForQuestion(message);
-      let response: string;
+    // Add placeholder for Jerome's response
+    const jeromeMessageId = `jerome-${Date.now()}`;
+    const jeromeMessage: JeromeChatMessage = {
+      id: jeromeMessageId,
+      role: 'jerome',
+      content: '',
+      timestamp: new Date(),
+      isStreaming: true,
+    };
+    setChatMessages(prev => [...prev, jeromeMessage]);
+    setIsLoading(true);
 
-      if (quickReply) {
-        response = quickReply.answer;
-      } else {
-        // Default responses based on keywords
-        const lowerMessage = message.toLowerCase();
-        if (lowerMessage.includes('vat')) {
-          response = "For VAT-related questions, I recommend checking your VAT section in the dashboard. The current VAT rate is 15%. Would you like me to explain VAT treatments for specific items?";
-        } else if (lowerMessage.includes('tax')) {
-          response = "I can help with tax queries! Please specify if you're asking about provisional tax, income tax (IT14), PAYE, or capital gains tax.";
-        } else if (lowerMessage.includes('payroll') || lowerMessage.includes('employee')) {
-          response = "For payroll assistance, navigate to the Payroll section. I can help with adding employees, calculating PAYE, or understanding UIF contributions.";
-        } else if (lowerMessage.includes('help') || lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
-          response = "I'm here to help! You can ask me about:\n• Categorizing transactions\n• VAT treatments\n• Tax deadlines\n• Payroll questions\n• Downloading reports\n\nJust type your question!";
-        } else {
-          response = "I understand you're asking about something important. While I'm still learning, I recommend consulting the guidance tips or reaching out to your accountant for specific advice. Is there anything else I can help with?";
-        }
+    try {
+      abortControllerRef.current = new AbortController();
+      
+      // Get conversation history (last 10 messages for context)
+      const conversationHistory = chatMessages
+        .slice(-10)
+        .map(m => ({ role: m.role, content: m.content }));
+      conversationHistory.push({ role: 'user', content: message });
+
+      const response = await supabase.functions.invoke('jerome-chat', {
+        body: { 
+          messages: conversationHistory,
+          userId: user?.id,
+          userRole: user?.role,
+        },
+      });
+
+      if (response.error) {
+        throw new Error(response.error.message);
       }
 
-      const jeromeMessage: JeromeChatMessage = {
-        id: `jerome-${Date.now()}`,
-        role: 'jerome',
-        content: response,
-        timestamp: new Date(),
-      };
-      setChatMessages(prev => [...prev, jeromeMessage]);
-    }, 800);
-  }, []);
+      // Handle streaming response
+      const reader = response.data?.getReader?.();
+      
+      if (reader) {
+        const decoder = new TextDecoder();
+        let fullContent = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\n');
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6);
+              if (data === '[DONE]') continue;
+
+              try {
+                const parsed = JSON.parse(data);
+                if (parsed.content) {
+                  fullContent += parsed.content;
+                  setChatMessages(prev =>
+                    prev.map(m =>
+                      m.id === jeromeMessageId
+                        ? { ...m, content: fullContent }
+                        : m
+                    )
+                  );
+                }
+              } catch {
+                // Skip malformed JSON
+              }
+            }
+          }
+        }
+
+        // Mark as complete
+        setChatMessages(prev =>
+          prev.map(m =>
+            m.id === jeromeMessageId
+              ? { ...m, isStreaming: false }
+              : m
+          )
+        );
+      } else {
+        // Non-streaming fallback
+        const data = response.data;
+        if (typeof data === 'string') {
+          setChatMessages(prev =>
+            prev.map(m =>
+              m.id === jeromeMessageId
+                ? { ...m, content: data, isStreaming: false }
+                : m
+            )
+          );
+        } else if (data?.content) {
+          setChatMessages(prev =>
+            prev.map(m =>
+              m.id === jeromeMessageId
+                ? { ...m, content: data.content, isStreaming: false }
+                : m
+            )
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Jerome chat error:', error);
+      
+      // Update with error message
+      setChatMessages(prev =>
+        prev.map(m =>
+          m.id === jeromeMessageId
+            ? { 
+                ...m, 
+                content: "I'm having trouble connecting right now. Please try again in a moment, or check out the Tips tab for helpful information!",
+                isStreaming: false 
+              }
+            : m
+        )
+      );
+    } finally {
+      setIsLoading(false);
+      abortControllerRef.current = null;
+    }
+  }, [chatMessages, user]);
 
   const clearChat = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
     setChatMessages([{
       id: 'welcome',
       role: 'jerome',
       content: "Chat cleared. How can I help you today?",
       timestamp: new Date(),
     }]);
+    setIsLoading(false);
   }, []);
 
   const markGuidanceRead = useCallback(() => {
@@ -134,6 +238,9 @@ export function JeromeProvider({ children }: { children: React.ReactNode }) {
         markGuidanceRead,
         activeTab,
         setActiveTab,
+        isLoading,
+        isVoiceEnabled,
+        setIsVoiceEnabled,
       }}
     >
       {children}
