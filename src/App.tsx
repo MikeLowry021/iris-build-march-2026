@@ -50,6 +50,16 @@ import JeromeAdmin from "./pages/admin/JeromeAdmin";
 import DevOpsMonitoring from "./pages/admin/DevOpsMonitoring";
 import UserManagement from "./pages/admin/UserManagement";
 
+// CEO pages
+import CEODashboard from "./pages/ceo/CEODashboard";
+import CEOPayroll from "./pages/ceo/CEOPayroll";
+import CEOEmployees from "./pages/ceo/CEOEmployees";
+import CEOTaxSummary from "./pages/ceo/CEOTaxSummary";
+import CEOReimbursements from "./pages/ceo/CEOReimbursements";
+import CEOMetrics from "./pages/ceo/CEOMetrics";
+import CEOAuditTrail from "./pages/ceo/CEOAuditTrail";
+import CEOSettings from "./pages/ceo/CEOSettings";
+
 const queryClient = new QueryClient();
 
 // Protected route wrapper with role-based access control
@@ -358,6 +368,16 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
+      {/* CEO routes */}
+      <Route path="/ceo" element={<ProtectedRoute allowedRoles={['ceo']}><CEODashboard /></ProtectedRoute>} />
+      <Route path="/ceo/payroll" element={<ProtectedRoute allowedRoles={['ceo']}><CEOPayroll /></ProtectedRoute>} />
+      <Route path="/ceo/employees" element={<ProtectedRoute allowedRoles={['ceo']}><CEOEmployees /></ProtectedRoute>} />
+      <Route path="/ceo/tax" element={<ProtectedRoute allowedRoles={['ceo']}><CEOTaxSummary /></ProtectedRoute>} />
+      <Route path="/ceo/reimbursements" element={<ProtectedRoute allowedRoles={['ceo']}><CEOReimbursements /></ProtectedRoute>} />
+      <Route path="/ceo/metrics" element={<ProtectedRoute allowedRoles={['ceo']}><CEOMetrics /></ProtectedRoute>} />
+      <Route path="/ceo/audit" element={<ProtectedRoute allowedRoles={['ceo']}><CEOAuditTrail /></ProtectedRoute>} />
+      <Route path="/ceo/settings" element={<ProtectedRoute allowedRoles={['ceo']}><CEOSettings /></ProtectedRoute>} />
 
       {/* Global settings route */}
       <Route

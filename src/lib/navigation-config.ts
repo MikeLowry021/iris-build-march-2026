@@ -19,6 +19,10 @@ import {
   FileCheck,
   BarChart3,
   Send,
+  DollarSign,
+  Briefcase,
+  TrendingUp,
+  History,
 } from 'lucide-react';
 import { UserRole } from '@/lib/types';
 
@@ -37,6 +41,17 @@ export const clientNavItems: NavItem[] = [
   { label: 'Payslips', href: '/client/payslips', icon: FileSpreadsheet },
   { label: 'Reports', href: '/client/reports', icon: BarChart3 },
   { label: 'Help', href: '/client/help', icon: HelpCircle },
+];
+
+export const ceoNavItems: NavItem[] = [
+  { label: 'Dashboard', href: '/ceo', icon: LayoutDashboard },
+  { label: 'Payroll', href: '/ceo/payroll', icon: DollarSign },
+  { label: 'Employees', href: '/ceo/employees', icon: Users },
+  { label: 'Tax Summary', href: '/ceo/tax', icon: Calculator },
+  { label: 'Reimbursements', href: '/ceo/reimbursements', icon: Receipt },
+  { label: 'Business Metrics', href: '/ceo/metrics', icon: TrendingUp },
+  { label: 'Audit Trail', href: '/ceo/audit', icon: History },
+  { label: 'Settings', href: '/ceo/settings', icon: Settings },
 ];
 
 export const bookkeeperNavItems: NavItem[] = [
@@ -81,6 +96,8 @@ export function getNavItemsForRole(role: UserRole | undefined): NavItem[] {
       return accountantNavItems;
     case 'bookkeeper':
       return bookkeeperNavItems;
+    case 'ceo':
+      return ceoNavItems;
     case 'client':
     default:
       return clientNavItems;
@@ -95,6 +112,8 @@ export function getPortalLabelForRole(role: UserRole | undefined): string {
       return 'Accountant Portal';
     case 'bookkeeper':
       return 'Bookkeeper Portal';
+    case 'ceo':
+      return 'CEO Portal';
     case 'client':
     default:
       return 'Client Portal';
@@ -109,6 +128,8 @@ export function getDashboardPathForRole(role: UserRole | undefined): string {
       return '/accountant';
     case 'bookkeeper':
       return '/bookkeeper';
+    case 'ceo':
+      return '/ceo';
     case 'client':
     default:
       return '/client';
