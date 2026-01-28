@@ -18,6 +18,7 @@ import {
   PenTool,
   FileCheck,
   BarChart3,
+  Send,
 } from 'lucide-react';
 import { UserRole } from '@/lib/types';
 
@@ -40,10 +41,12 @@ export const clientNavItems: NavItem[] = [
 
 export const bookkeeperNavItems: NavItem[] = [
   { label: 'Dashboard', href: '/bookkeeper', icon: LayoutDashboard },
-  { label: 'Assigned Clients', href: '/bookkeeper/clients', icon: Users },
-  { label: 'Categorize Transactions', href: '/bookkeeper/clients/1/categorize', icon: Receipt },
+  { label: 'My Clients', href: '/bookkeeper/my-clients', icon: Users },
+  { label: 'Categorization', href: '/bookkeeper/clients/1/categorize', icon: Receipt },
   { label: 'Adjusting Entries', href: '/bookkeeper/clients/1/adjusting-entries', icon: BookOpen },
+  { label: 'Submissions', href: '/bookkeeper/submissions', icon: Send },
   { label: 'Draft Reports', href: '/bookkeeper/clients/1/draft-reports', icon: ClipboardCheck },
+  { label: 'Settings', href: '/bookkeeper/settings', icon: Settings },
   { label: 'Help', href: '/bookkeeper/help', icon: HelpCircle },
 ];
 
