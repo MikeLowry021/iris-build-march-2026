@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Breadcrumbs } from '@/components/layouts/Breadcrumbs';
+import { GlobalSearch } from '@/components/GlobalSearch';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -161,9 +162,9 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             <Breadcrumbs />
           </div>
 
-          {/* Center: Empty for future search */}
+          {/* Center: Global Search */}
           <div className="hidden flex-1 justify-center lg:flex">
-            {/* Future search bar placeholder */}
+            <GlobalSearch />
           </div>
 
           {/* Right: Theme toggle + User menu */}
