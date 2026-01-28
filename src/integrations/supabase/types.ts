@@ -14,7 +14,141 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      jerome_auto_sign_logs: {
+        Row: {
+          client_id: string
+          client_name: string
+          conditions: Json
+          document_id: string
+          document_name: string
+          failure_reason: string | null
+          id: string
+          signed_at: string | null
+          status: string
+        }
+        Insert: {
+          client_id: string
+          client_name: string
+          conditions: Json
+          document_id: string
+          document_name: string
+          failure_reason?: string | null
+          id?: string
+          signed_at?: string | null
+          status: string
+        }
+        Update: {
+          client_id?: string
+          client_name?: string
+          conditions?: Json
+          document_id?: string
+          document_name?: string
+          failure_reason?: string | null
+          id?: string
+          signed_at?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      jerome_chat_logs: {
+        Row: {
+          created_at: string | null
+          id: string
+          jerome_response: string
+          response_time_ms: number | null
+          user_id: string | null
+          user_message: string
+          user_role: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          jerome_response: string
+          response_time_ms?: number | null
+          user_id?: string | null
+          user_message: string
+          user_role?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          jerome_response?: string
+          response_time_ms?: number | null
+          user_id?: string | null
+          user_message?: string
+          user_role?: string | null
+        }
+        Relationships: []
+      }
+      jerome_notifications: {
+        Row: {
+          action_url: string | null
+          created_at: string | null
+          id: string
+          message: string
+          read: boolean | null
+          title: string
+          type: string
+          urgency: string | null
+          user_id: string
+        }
+        Insert: {
+          action_url?: string | null
+          created_at?: string | null
+          id?: string
+          message: string
+          read?: boolean | null
+          title: string
+          type: string
+          urgency?: string | null
+          user_id: string
+        }
+        Update: {
+          action_url?: string | null
+          created_at?: string | null
+          id?: string
+          message?: string
+          read?: boolean | null
+          title?: string
+          type?: string
+          urgency?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      jerome_tips: {
+        Row: {
+          category: string
+          content: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          priority: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          content: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          priority?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          content?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          priority?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
