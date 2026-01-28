@@ -63,12 +63,13 @@ export const accountantNavItems: NavItem[] = [
 
 export const adminNavItems: NavItem[] = [
   { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+  { label: 'User Management', href: '/admin/users', icon: Users },
   { label: 'Manage Clients', href: '/admin/manage-clients', icon: Building2 },
   { label: 'Manage Bookkeepers', href: '/admin/manage-bookkeepers', icon: Users },
+  { label: 'DevOps Monitoring', href: '/admin/monitoring', icon: Activity },
   { label: 'Jerome AI', href: '/admin/jerome', icon: Bot },
   { label: 'System Settings', href: '/admin/settings', icon: Settings },
   { label: 'Audit Logs', href: '/admin/audit-logs', icon: Activity },
-  { label: 'Backup & Security', href: '/admin/backup-security', icon: Database },
   { label: 'Reports', href: '/admin/reports', icon: BarChart3 },
 ];
 
