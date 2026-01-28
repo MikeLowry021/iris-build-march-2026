@@ -32,6 +32,9 @@ import BookkeeperDashboard from "./pages/bookkeeper/BookkeeperDashboard";
 import TransactionCategorization from "./pages/bookkeeper/TransactionCategorization";
 import AdjustingEntries from "./pages/bookkeeper/AdjustingEntries";
 import DraftReports from "./pages/bookkeeper/DraftReports";
+import Submissions from "./pages/bookkeeper/Submissions";
+import MyClients from "./pages/bookkeeper/MyClients";
+import BookkeeperSettings from "./pages/bookkeeper/BookkeeperSettings";
 
 // Admin pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -228,10 +231,10 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/bookkeeper/clients"
+        path="/bookkeeper/my-clients"
         element={
           <ProtectedRoute allowedRoles={['bookkeeper']}>
-            <BookkeeperDashboard />
+            <MyClients />
           </ProtectedRoute>
         }
       />
@@ -256,6 +259,22 @@ function AppRoutes() {
         element={
           <ProtectedRoute allowedRoles={['bookkeeper']}>
             <DraftReports />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/bookkeeper/submissions"
+        element={
+          <ProtectedRoute allowedRoles={['bookkeeper']}>
+            <Submissions />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/bookkeeper/settings"
+        element={
+          <ProtectedRoute allowedRoles={['bookkeeper']}>
+            <BookkeeperSettings />
           </ProtectedRoute>
         }
       />
