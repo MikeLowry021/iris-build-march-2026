@@ -22,11 +22,14 @@ import {
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 
+import { Briefcase } from 'lucide-react';
+
 const demoProfiles: { role: UserRole; label: string; icon: React.ElementType; email: string }[] = [
   { role: 'client', label: 'Client', icon: User, email: 'client@iris.demo' },
   { role: 'bookkeeper', label: 'Bookkeeper', icon: BookOpen, email: 'bookkeeper@iris.demo' },
   { role: 'accountant', label: 'Accountant', icon: Building2, email: 'accountant@iris.demo' },
-  { role: 'admin', label: 'CEO/Admin', icon: Shield, email: 'admin@iris.demo' },
+  { role: 'ceo', label: 'CEO', icon: Briefcase, email: 'ceo@iris.demo' },
+  { role: 'admin', label: 'Admin', icon: Shield, email: 'admin@iris.demo' },
 ];
 
 export default function Login() {
@@ -42,6 +45,7 @@ export default function Login() {
   const getRedirectPath = (role: UserRole): string => {
     switch (role) {
       case 'admin': return '/admin';
+      case 'ceo': return '/ceo';
       case 'accountant': return '/accountant';
       case 'bookkeeper': return '/bookkeeper';
       case 'client': return '/client';
@@ -63,6 +67,7 @@ export default function Login() {
       // For demo, detect role from email
       let role: UserRole = 'client';
       if (email.includes('admin')) role = 'admin';
+      else if (email.includes('ceo')) role = 'ceo';
       else if (email.includes('accountant')) role = 'accountant';
       else if (email.includes('bookkeeper')) role = 'bookkeeper';
       
