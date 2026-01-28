@@ -26,6 +26,10 @@ import Payslips from "./pages/client/Payslips";
 // Accountant pages
 import AccountantDashboard from "./pages/accountant/AccountantDashboard";
 import ClientReview from "./pages/accountant/ClientReview";
+import ReviewQueue from "./pages/accountant/ReviewQueue";
+import RFIManagement from "./pages/accountant/RFIManagement";
+import OverrideEntry from "./pages/accountant/OverrideEntry";
+import AccountantSettings from "./pages/accountant/AccountantSettings";
 
 // Bookkeeper pages
 import BookkeeperDashboard from "./pages/bookkeeper/BookkeeperDashboard";
@@ -149,6 +153,14 @@ function AppRoutes() {
         }
       />
       <Route
+        path="/accountant/review-queue"
+        element={
+          <ProtectedRoute allowedRoles={['accountant']}>
+            <ReviewQueue />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/accountant/clients"
         element={
           <ProtectedRoute allowedRoles={['accountant']}>
@@ -165,31 +177,23 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/accountant/review"
+        path="/accountant/rfi"
         element={
           <ProtectedRoute allowedRoles={['accountant']}>
-            <AccountantDashboard />
+            <RFIManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/accountant/override"
+        element={
+          <ProtectedRoute allowedRoles={['accountant']}>
+            <OverrideEntry />
           </ProtectedRoute>
         }
       />
       <Route
         path="/accountant/it14sd"
-        element={
-          <ProtectedRoute allowedRoles={['accountant']}>
-            <AccountantDashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/accountant/sign-off"
-        element={
-          <ProtectedRoute allowedRoles={['accountant']}>
-            <AccountantDashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/accountant/audit-trail"
         element={
           <ProtectedRoute allowedRoles={['accountant']}>
             <AccountantDashboard />
@@ -208,15 +212,7 @@ function AppRoutes() {
         path="/accountant/settings"
         element={
           <ProtectedRoute allowedRoles={['accountant']}>
-            <AccountantDashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/accountant/help"
-        element={
-          <ProtectedRoute allowedRoles={['accountant']}>
-            <AccountantDashboard />
+            <AccountantSettings />
           </ProtectedRoute>
         }
       />

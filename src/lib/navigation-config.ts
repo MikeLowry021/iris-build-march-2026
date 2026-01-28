@@ -52,14 +52,13 @@ export const bookkeeperNavItems: NavItem[] = [
 
 export const accountantNavItems: NavItem[] = [
   { label: 'Dashboard', href: '/accountant', icon: LayoutDashboard },
+  { label: 'Review Queue', href: '/accountant/review-queue', icon: ClipboardCheck },
   { label: 'All Clients', href: '/accountant/clients', icon: Users },
-  { label: 'Review Financials', href: '/accountant/review', icon: FileCheck },
-  { label: 'IT14SD Reconciliation', href: '/accountant/it14sd', icon: Calculator },
-  { label: 'Sign-Off', href: '/accountant/sign-off', icon: PenTool },
-  { label: 'Audit Trail', href: '/accountant/audit-trail', icon: Activity },
+  { label: 'RFI Management', href: '/accountant/rfi', icon: HelpCircle },
+  { label: 'Override Entries', href: '/accountant/override', icon: PenTool },
+  { label: 'IT14SD', href: '/accountant/it14sd', icon: Calculator },
   { label: 'Reports', href: '/accountant/reports', icon: BarChart3 },
   { label: 'Settings', href: '/accountant/settings', icon: Settings },
-  { label: 'Help', href: '/accountant/help', icon: HelpCircle },
 ];
 
 export const adminNavItems: NavItem[] = [
