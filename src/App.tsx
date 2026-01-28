@@ -47,6 +47,8 @@ import ClientManagement from "./pages/admin/ClientManagement";
 import SystemSettings from "./pages/admin/SystemSettings";
 import AuditLogs from "./pages/admin/AuditLogs";
 import JeromeAdmin from "./pages/admin/JeromeAdmin";
+import DevOpsMonitoring from "./pages/admin/DevOpsMonitoring";
+import UserManagement from "./pages/admin/UserManagement";
 
 const queryClient = new QueryClient();
 
@@ -325,10 +327,18 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/admin/backup-security"
+        path="/admin/monitoring"
         element={
           <ProtectedRoute allowedRoles={['admin']}>
-            <AdminDashboard />
+            <DevOpsMonitoring />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/users"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <UserManagement />
           </ProtectedRoute>
         }
       />
