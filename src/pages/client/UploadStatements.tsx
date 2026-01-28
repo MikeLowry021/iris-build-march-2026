@@ -1,9 +1,18 @@
 import { useState, useCallback } from 'react';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { StatusBadge } from '@/components/StatusBadge';
-import { mockBankStatements } from '@/lib/mock-data';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { mockClientDocuments, mockClientInfo, availableMonths } from '@/lib/client-mock-data';
 import { 
   Upload, 
   FileText, 
@@ -12,6 +21,9 @@ import {
   AlertCircle,
   Loader2,
   File,
+  FileSpreadsheet,
+  Receipt,
+  HelpCircle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -21,11 +33,22 @@ interface UploadedFile {
   size: number;
   progress: number;
   status: 'uploading' | 'processing' | 'complete' | 'error';
+  type: 'bank-statement' | 'invoice' | 'receipt' | 'other';
+  period: string;
 }
+
+const fileTypeOptions = [
+  { value: 'bank-statement', label: 'Bank Statement', icon: FileSpreadsheet },
+  { value: 'invoice', label: 'Invoice', icon: FileText },
+  { value: 'receipt', label: 'Receipt', icon: Receipt },
+  { value: 'other', label: 'Other', icon: HelpCircle },
+];
 
 export default function UploadStatements() {
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+  const [selectedType, setSelectedType] = useState<string>('bank-statement');
+  const [selectedPeriod, setSelectedPeriod] = useState<string>(availableMonths[0]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -33,7 +56,7 @@ export default function UploadStatements() {
     
     const droppedFiles = Array.from(e.dataTransfer.files);
     handleFiles(droppedFiles);
-  }, []);
+  }, [selectedType, selectedPeriod]);
 
   const handleFiles = (fileList: File[]) => {
     const newFiles: UploadedFile[] = fileList.map(file => ({
@@ -42,11 +65,12 @@ export default function UploadStatements() {
       size: file.size,
       progress: 0,
       status: 'uploading',
+      type: selectedType as UploadedFile['type'],
+      period: selectedPeriod,
     }));
 
     setFiles(prev => [...prev, ...newFiles]);
 
-    // Simulate upload progress
     newFiles.forEach(file => {
       simulateUpload(file.id);
     });
@@ -64,7 +88,6 @@ export default function UploadStatements() {
             f.id === fileId ? { ...f, progress: 100, status: 'processing' } : f
           )
         );
-        // Simulate processing
         setTimeout(() => {
           setFiles(prev =>
             prev.map(f =>
@@ -94,15 +117,75 @@ export default function UploadStatements() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
+  const getFileTypeIcon = (type: string) => {
+    const option = fileTypeOptions.find(o => o.value === type);
+    return option?.icon || File;
+  };
+
+  const getFileTypeLabel = (type: string) => {
+    const option = fileTypeOptions.find(o => o.value === type);
+    return option?.label || type;
+  };
+
+  const recentUploads = mockClientDocuments.slice(0, 10);
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="page-title">Upload Bank Statements</h1>
+          <h1 className="page-title">Upload Documents</h1>
           <p className="mt-1 text-muted-foreground">
-            Upload your bank statements for processing and bookkeeping
+            Upload your bank statements, invoices, and receipts for processing
           </p>
         </div>
+
+        {/* Upload Configuration */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Upload Settings</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <div>
+                <Label className="text-sm text-muted-foreground">Client</Label>
+                <p className="mt-1 font-medium">{mockClientInfo.company}</p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="file-type">Document Type</Label>
+                <Select value={selectedType} onValueChange={setSelectedType}>
+                  <SelectTrigger id="file-type">
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {fileTypeOptions.map(option => (
+                      <SelectItem key={option.value} value={option.value}>
+                        <span className="flex items-center gap-2">
+                          <option.icon className="h-4 w-4" />
+                          {option.label}
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="period">Period (Month/Year)</Label>
+                <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+                  <SelectTrigger id="period">
+                    <SelectValue placeholder="Select period" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableMonths.map(month => (
+                      <SelectItem key={month} value={month}>
+                        {month}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Upload area */}
         <div
@@ -148,92 +231,117 @@ export default function UploadStatements() {
 
         {/* Upload queue */}
         {files.length > 0 && (
-          <div className="rounded-xl border border-border bg-card">
-            <div className="border-b border-border p-4">
-              <h2 className="section-title">Upload Queue</h2>
-            </div>
-            <div className="divide-y divide-border">
-              {files.map(file => (
-                <div key={file.id} className="flex items-center gap-4 p-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
-                    <FileText className="h-5 w-5 text-muted-foreground" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium text-foreground">{file.name}</p>
-                      <div className="flex items-center gap-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Upload Queue</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="divide-y divide-border">
+                {files.map(file => {
+                  const FileIcon = getFileTypeIcon(file.type);
+                  return (
+                    <div key={file.id} className="flex items-center gap-4 p-4">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
+                        <FileIcon className="h-5 w-5 text-muted-foreground" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-medium text-foreground">{file.name}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {getFileTypeLabel(file.type)} • {file.period}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {file.status === 'uploading' && (
+                              <span className="text-xs text-muted-foreground">
+                                {Math.round(file.progress)}%
+                              </span>
+                            )}
+                            {file.status === 'processing' && (
+                              <span className="flex items-center gap-1 text-xs text-primary">
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                                Processing
+                              </span>
+                            )}
+                            {file.status === 'complete' && (
+                              <span className="flex items-center gap-1 text-xs text-success">
+                                <Check className="h-3 w-3" />
+                                Complete
+                              </span>
+                            )}
+                            {file.status === 'error' && (
+                              <span className="flex items-center gap-1 text-xs text-destructive">
+                                <AlertCircle className="h-3 w-3" />
+                                Error
+                              </span>
+                            )}
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => removeFile(file.id)}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          {formatFileSize(file.size)}
+                        </p>
                         {file.status === 'uploading' && (
-                          <span className="text-xs text-muted-foreground">
-                            {Math.round(file.progress)}%
-                          </span>
+                          <Progress value={file.progress} className="mt-2 h-1" />
                         )}
-                        {file.status === 'processing' && (
-                          <span className="flex items-center gap-1 text-xs text-primary">
-                            <Loader2 className="h-3 w-3 animate-spin" />
-                            Processing
-                          </span>
-                        )}
-                        {file.status === 'complete' && (
-                          <span className="flex items-center gap-1 text-xs text-success">
-                            <Check className="h-3 w-3" />
-                            Complete
-                          </span>
-                        )}
-                        {file.status === 'error' && (
-                          <span className="flex items-center gap-1 text-xs text-destructive">
-                            <AlertCircle className="h-3 w-3" />
-                            Error
-                          </span>
-                        )}
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => removeFile(file.id)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
                       </div>
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      {formatFileSize(file.size)}
-                    </p>
-                    {file.status === 'uploading' && (
-                      <Progress value={file.progress} className="mt-2 h-1" />
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
         )}
 
-        {/* Previously uploaded */}
-        <div className="rounded-xl border border-border bg-card">
-          <div className="border-b border-border p-4">
-            <h2 className="section-title">Previously Uploaded</h2>
-          </div>
-          <div className="divide-y divide-border">
-            {mockBankStatements.map(statement => (
-              <div key={statement.id} className="flex items-center justify-between p-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                    <File className="h-5 w-5 text-primary" />
+        {/* Recent Uploads List */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Recent Uploads (Last 10)</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="divide-y divide-border">
+              {recentUploads.map(doc => {
+                const FileIcon = getFileTypeIcon(doc.type);
+                return (
+                  <div key={doc.id} className="flex items-center justify-between p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                        <FileIcon className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-foreground">
+                          {doc.name}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {getFileTypeLabel(doc.type)} • {doc.period} • {formatFileSize(doc.size)}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Uploaded: {new Date(doc.uploadDate).toLocaleDateString('en-ZA', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric',
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                    <StatusBadge 
+                      status={doc.status === 'processed' ? 'complete' : 
+                              doc.status === 'error' ? 'error' : 'pending'} 
+                    />
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-foreground">
-                      {statement.filename}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {statement.bank} • {statement.period} • {statement.transactionCount} transactions
-                    </p>
-                  </div>
-                </div>
-                <StatusBadge status={statement.status === 'processed' ? 'complete' : statement.status} />
-              </div>
-            ))}
-          </div>
-        </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </DashboardLayout>
   );
