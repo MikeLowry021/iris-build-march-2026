@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useJerome } from '@/contexts/JeromeContext';
-import { Bot, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Tooltip,
@@ -31,7 +31,7 @@ export function JeromeButton() {
             {isOpen ? (
               <X className="h-6 w-6 text-primary-foreground" />
             ) : (
-              <Bot className="h-6 w-6 text-primary-foreground" />
+              <span className="text-xl font-bold text-primary-foreground">J</span>
             )}
             
             {/* Notification dot */}

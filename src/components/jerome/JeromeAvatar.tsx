@@ -1,5 +1,4 @@
 import { cn } from '@/lib/utils';
-import { Bot } from 'lucide-react';
 
 interface JeromeAvatarProps {
   size?: 'sm' | 'md' | 'lg';
@@ -14,21 +13,22 @@ export function JeromeAvatar({ size = 'md', className, showLabel = false }: Jero
     lg: 'h-14 w-14',
   };
 
-  const iconSizes = {
-    sm: 'h-4 w-4',
-    md: 'h-5 w-5',
-    lg: 'h-7 w-7',
+  const textSizes = {
+    sm: 'text-sm',
+    md: 'text-lg',
+    lg: 'text-2xl',
   };
 
   return (
     <div className={cn('flex items-center gap-2', className)}>
       <div
         className={cn(
-          'flex items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-lg',
-          sizeClasses[size]
+          'flex items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-lg font-bold',
+          sizeClasses[size],
+          textSizes[size]
         )}
       >
-        <Bot className={iconSizes[size]} />
+        J
       </div>
       {showLabel && (
         <div className="flex flex-col">
