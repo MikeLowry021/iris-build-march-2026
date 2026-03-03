@@ -255,7 +255,7 @@ export default function Login() {
                 Made Simple.
               </h2>
               <p className="mt-4 text-lg text-white/80">
-                Streamline your bookkeeping, VAT returns, and tax compliance with AuditNex — 
+                Streamline your bookkeeping, VAT returns, and tax compliance with Iris — 
                 built for South African businesses.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-4">

@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${openRouterKey}`,
             'HTTP-Referer': 'https://lovable.dev',
-            'X-Title': 'AuditNex Jerome AI',
+            'X-Title': 'Iris Jerome AI',
           },
           body: JSON.stringify({
             model: 'google/gemini-2.0-flash-001',

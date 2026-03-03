@@ -12,7 +12,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
-    const stored = localStorage.getItem('auditnex-theme') as Theme;
+    const stored = localStorage.getItem('iris-theme') as Theme;
     return stored || 'system';
   });
 
@@ -36,7 +36,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     };
 
     updateTheme();
-    localStorage.setItem('auditnex-theme', theme);
+    localStorage.setItem('iris-theme', theme);
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = () => {

@@ -13,21 +13,21 @@ export const mockUsers: User[] = [
     email: 'accountant@iris.demo',
     name: 'Sarah van der Berg',
     role: 'accountant',
-    company: 'AuditNex Partners',
+    company: 'Iris Partners',
   },
   {
     id: '3',
     email: 'bookkeeper@iris.demo',
     name: 'Linda Dlamini',
     role: 'bookkeeper',
-    company: 'AuditNex Partners',
+    company: 'Iris Partners',
   },
   {
     id: '4',
     email: 'admin@iris.demo',
     name: 'Dr. Pieter van Niekerk',
     role: 'admin',
-    company: 'AuditNex Partners',
+    company: 'Iris Partners',
   },
 ];
 

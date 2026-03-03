@@ -40,7 +40,7 @@ export function Logo({ className, size = 'md' }: LogoProps) {
         size === 'md' && 'text-xl',
         size === 'lg' && 'text-2xl',
       )}>
-        Audit<span className="text-primary">Nex</span>
+        Ir<span className="text-primary">is</span>
       </span>
     </div>
   );

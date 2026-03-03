@@ -12,7 +12,7 @@ export const mockBookkeepers: Bookkeeper[] = [
   {
     id: 'bk1',
     name: 'Linda Dlamini',
-    email: 'linda@auditnex.co.za',
+    email: 'linda@iris.co.za',
     clientsAssigned: ['1', '2', '5'],
     isActive: true,
     lastLogin: '2026-01-27 08:30',
@@ -21,7 +21,7 @@ export const mockBookkeepers: Bookkeeper[] = [
   {
     id: 'bk2',
     name: 'James Sithole',
-    email: 'james@auditnex.co.za',
+    email: 'james@iris.co.za',
     clientsAssigned: ['3', '6', '8', '11'],
     isActive: true,
     lastLogin: '2026-01-27 09:15',
@@ -30,7 +30,7 @@ export const mockBookkeepers: Bookkeeper[] = [
   {
     id: 'bk3',
     name: 'Maria van Wyk',
-    email: 'maria@auditnex.co.za',
+    email: 'maria@iris.co.za',
     clientsAssigned: ['4', '7', '10'],
     isActive: true,
     lastLogin: '2026-01-26 16:45',
@@ -39,7 +39,7 @@ export const mockBookkeepers: Bookkeeper[] = [
   {
     id: 'bk4',
     name: 'Peter Mokoena',
-    email: 'peter@auditnex.co.za',
+    email: 'peter@iris.co.za',
     clientsAssigned: ['9', '12'],
     isActive: false,
     lastLogin: '2026-01-15 11:00',
@@ -48,7 +48,7 @@ export const mockBookkeepers: Bookkeeper[] = [
   {
     id: 'bk5',
     name: 'Susan Pretorius',
-    email: 'susan@auditnex.co.za',
+    email: 'susan@iris.co.za',
     clientsAssigned: ['13', '14', '15'],
     isActive: true,
     lastLogin: '2026-01-27 07:00',
@@ -299,7 +299,7 @@ export const mockAdminUsers: AdminUser[] = [
   {
     id: 'u2',
     name: 'Dr. Pieter van Niekerk',
-    email: 'pieter@auditnex.co.za',
+    email: 'pieter@iris.co.za',
     role: 'admin',
     office: 'Cape Town',
     status: 'active',
@@ -310,7 +310,7 @@ export const mockAdminUsers: AdminUser[] = [
   {
     id: 'u3',
     name: 'Sarah van der Berg',
-    email: 'sarah@auditnex.co.za',
+    email: 'sarah@iris.co.za',
     role: 'accountant',
     office: 'Cape Town',
     status: 'active',
@@ -322,7 +322,7 @@ export const mockAdminUsers: AdminUser[] = [
   {
     id: 'u4',
     name: 'John Mbeki',
-    email: 'john@auditnex.co.za',
+    email: 'john@iris.co.za',
     role: 'accountant',
     office: 'Johannesburg',
     status: 'active',
@@ -467,18 +467,18 @@ function getActionDetails(action: string, resourceType: string, status: string):
 
 export const mockSystemSettings: SystemSettings = {
   general: {
-    companyName: 'Audit Nex Partners',
+    companyName: 'Iris Partners',
     logoUrl: undefined,
     vatRate: 15,
     financialYearEnd: '28 February',
     taxTableUrl: undefined,
   },
   email: {
-    smtpServer: 'smtp.auditnex.co.za',
+    smtpServer: 'smtp.iris.co.za',
     smtpPort: 587,
-    smtpUsername: 'notifications@auditnex.co.za',
-    emailFromAddress: 'no-reply@auditnex.co.za',
-    emailFromName: 'Audit Nex System',
+    smtpUsername: 'notifications@iris.co.za',
+    emailFromAddress: 'no-reply@iris.co.za',
+    emailFromName: 'Iris System',
   },
   integrations: {
     apifyApiKey: undefined,
