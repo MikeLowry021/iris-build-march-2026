@@ -21,10 +21,10 @@ export function JeromeSettingsPanel() {
       <div className="space-y-4 p-3">
         <div className="mb-4">
           <h3 className="text-sm font-semibold text-muted-foreground">
-            Jerome Settings
+            Iris AI Settings
           </h3>
           <p className="text-xs text-muted-foreground">
-            Customize how Jerome assists you
+            Customize how Iris AI assists you
           </p>
         </div>
 
@@ -36,7 +36,7 @@ export function JeromeSettingsPanel() {
               <CardTitle className="text-sm">Notification Frequency</CardTitle>
             </div>
             <CardDescription className="text-xs">
-              How often should Jerome notify you?
+              How often should Iris AI notify you?
             </CardDescription>
           </CardHeader>
           <CardContent className="px-4 pb-4">
@@ -110,7 +110,7 @@ export function JeromeSettingsPanel() {
               <CardTitle className="text-sm">Auto-Sign</CardTitle>
             </div>
             <CardDescription className="text-xs">
-              Allow Jerome to automatically sign documents when all conditions are met
+              Allow Iris AI to automatically sign documents when all conditions are met
             </CardDescription>
           </CardHeader>
           <CardContent className="px-4 pb-4">
@@ -135,7 +135,7 @@ export function JeromeSettingsPanel() {
               <CardTitle className="text-sm">Email Notifications</CardTitle>
             </div>
             <CardDescription className="text-xs">
-              Receive email updates from Jerome
+              Receive email updates from Iris AI
             </CardDescription>
           </CardHeader>
           <CardContent className="px-4 pb-4">
@@ -160,7 +160,7 @@ export function JeromeSettingsPanel() {
               <CardTitle className="text-sm">Preferred Contact Time</CardTitle>
             </div>
             <CardDescription className="text-xs">
-              When should Jerome send digest notifications?
+              When should Iris AI send digest notifications?
             </CardDescription>
           </CardHeader>
           <CardContent className="px-4 pb-4">

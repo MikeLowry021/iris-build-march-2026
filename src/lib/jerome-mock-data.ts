@@ -266,7 +266,7 @@ export const jeromeQuickReplies: JeromeQuickReply[] = [
   {
     id: 'qr-6',
     question: 'How does auto-sign work?',
-    answer: 'Auto-sign is a feature where I can digitally sign documents on your behalf when all conditions are met:\n• Trial Balance matches Financials\n• All transactions are categorized\n• No critical discrepancies\n• All adjusting entries reviewed\n\nYou can enable/disable this in Jerome Settings.',
+    answer: 'Auto-sign is a feature where I can digitally sign documents on your behalf when all conditions are met:\n• Trial Balance matches Financials\n• All transactions are categorized\n• No critical discrepancies\n• All adjusting entries reviewed\n\nYou can enable/disable this in Iris AI Settings.',
     category: 'general',
   },
   {

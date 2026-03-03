@@ -5,7 +5,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const SYSTEM_PROMPT = `You are Jerome, an AI accounting assistant powered by Dr. Swartz's expertise in South African tax and accounting. You help clients, bookkeepers, and accountants with:
+const SYSTEM_PROMPT = `You are Iris AI, an AI accounting assistant powered by Dr. Swartz's expertise in South African tax and accounting. You help clients, bookkeepers, and accountants with:
 
 **South African Tax Expertise:**
 - Income Tax (individuals and companies)
@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${openRouterKey}`,
             'HTTP-Referer': 'https://lovable.dev',
-            'X-Title': 'Iris Jerome AI',
+            'X-Title': 'Iris AI',
           },
           body: JSON.stringify({
             model: 'google/gemini-2.0-flash-001',

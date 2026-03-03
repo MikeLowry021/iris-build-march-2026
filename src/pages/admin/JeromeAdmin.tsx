@@ -131,7 +131,7 @@ export default function JeromeAdmin() {
       if (autoSignRes.data) setAutoSignLogs(autoSignRes.data);
     } catch (error) {
       console.error('Failed to fetch data:', error);
-      toast.error('Failed to load Jerome admin data');
+      toast.error('Failed to load Iris AI admin data');
     } finally {
       setIsLoading(false);
     }
@@ -257,9 +257,9 @@ export default function JeromeAdmin() {
     <DashboardLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Jerome AI Admin</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Iris AI Admin</h1>
           <p className="text-muted-foreground">
-            Monitor and manage the Jerome AI assistant
+            Monitor and manage the Iris AI assistant
           </p>
         </div>
 
@@ -367,7 +367,7 @@ export default function JeromeAdmin() {
             <Card>
               <CardHeader>
                 <CardTitle>Recent Chat Logs</CardTitle>
-                <CardDescription>Last 100 conversations with Jerome</CardDescription>
+                <CardDescription>Last 100 conversations with Iris AI</CardDescription>
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-[500px]">
@@ -407,7 +407,7 @@ export default function JeromeAdmin() {
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
                   <CardTitle>Tips Management</CardTitle>
-                  <CardDescription>Create and manage Jerome's tips</CardDescription>
+                  <CardDescription>Create and manage Iris AI tips</CardDescription>
                 </div>
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                   <DialogTrigger asChild>
@@ -420,7 +420,7 @@ export default function JeromeAdmin() {
                     <DialogHeader>
                       <DialogTitle>{selectedTip ? 'Edit Tip' : 'Create New Tip'}</DialogTitle>
                       <DialogDescription>
-                        {selectedTip ? 'Update the tip details below.' : 'Add a new tip for Jerome to share with users.'}
+                        {selectedTip ? 'Update the tip details below.' : 'Add a new tip for Iris AI to share with users.'}
                       </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
@@ -554,7 +554,7 @@ export default function JeromeAdmin() {
             <Card>
               <CardHeader>
                 <CardTitle>Auto-Sign Logs</CardTitle>
-                <CardDescription>History of Jerome's automatic document signing</CardDescription>
+                <CardDescription>History of Iris AI automatic document signing</CardDescription>
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-[500px]">

@@ -58,7 +58,7 @@ export function JeromeChatWidget() {
         <div className="flex items-center gap-2">
           <JeromeAvatar size="sm" />
           <div>
-            <p className="text-sm font-semibold">Chat with Jerome</p>
+            <p className="text-sm font-semibold">Chat with Iris AI</p>
             <p className="text-xs text-muted-foreground">AI-powered accounting assistant</p>
           </div>
         </div>
