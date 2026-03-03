@@ -43,7 +43,7 @@ export function JeromeGuidancePanel() {
         </div>
         <h3 className="text-lg font-semibold">No Guidance Available</h3>
         <p className="mt-2 text-sm text-muted-foreground">
-          Navigate to different pages to see contextual tips and guidance from Jerome.
+          Navigate to different pages to see contextual tips and guidance from Iris AI.
         </p>
       </div>
     );

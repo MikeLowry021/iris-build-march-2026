@@ -32,8 +32,8 @@ export function JeromeAvatar({ size = 'md', className, showLabel = false }: Jero
       </div>
       {showLabel && (
         <div className="flex flex-col">
-          <span className="text-sm font-semibold text-foreground">Jerome</span>
-          <span className="text-xs text-muted-foreground">AI Assistant</span>
+          <span className="text-sm font-semibold text-foreground">Iris AI</span>
+          <span className="text-xs text-muted-foreground">Assistant</span>
         </div>
       )}
     </div>

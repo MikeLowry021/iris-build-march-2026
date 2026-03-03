@@ -82,7 +82,7 @@ export const adminNavItems: NavItem[] = [
   { label: 'Manage Clients', href: '/admin/manage-clients', icon: Building2 },
   { label: 'Manage Bookkeepers', href: '/admin/manage-bookkeepers', icon: Users },
   { label: 'DevOps Monitoring', href: '/admin/monitoring', icon: Activity },
-  { label: 'Jerome AI', href: '/admin/jerome', icon: Bot },
+  { label: 'Iris AI', href: '/admin/jerome', icon: Bot },
   { label: 'System Settings', href: '/admin/settings', icon: Settings },
   { label: 'Audit Logs', href: '/admin/audit-logs', icon: Activity },
   { label: 'Reports', href: '/admin/reports', icon: BarChart3 },

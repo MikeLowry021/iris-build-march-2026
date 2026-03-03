@@ -28,9 +28,9 @@ export function JeromePanel() {
       <div className="flex items-center gap-3 border-b border-border bg-gradient-to-r from-primary/10 to-transparent p-4">
         <JeromeAvatar size="md" />
         <div className="flex-1">
-          <h2 className="font-semibold text-foreground">Jerome</h2>
+          <h2 className="font-semibold text-foreground">Iris AI</h2>
           <p className="text-xs text-muted-foreground">
-            AI Assistant • Powered by Dr. Swartz's expertise
+            Powered by Dr. Swartz's expertise
           </p>
         </div>
         <JeromeNotificationBell />

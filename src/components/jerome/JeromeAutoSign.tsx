@@ -34,7 +34,7 @@ export function JeromeAutoSign({ showRecent = true }: JeromeAutoSignProps) {
         </CardHeader>
         <CardContent className="px-4 pb-4">
           <p className="text-xs text-muted-foreground mb-3">
-            Jerome automatically signs documents when all conditions are met.
+            Iris AI automatically signs documents when all conditions are met.
             This feature is powered by Dr. Swartz's compliance verification protocols.
           </p>
           

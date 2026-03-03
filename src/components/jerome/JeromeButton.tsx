@@ -45,7 +45,7 @@ export function JeromeButton() {
         </TooltipTrigger>
         <TooltipContent side="left" className="max-w-xs">
           <div className="text-center">
-            <p className="font-semibold">Jerome Assistant</p>
+            <p className="font-semibold">Iris AI Assistant</p>
             <p className="text-xs text-muted-foreground">
               AI-powered accounting assistant. I'm here to help!
             </p>
@@ -63,7 +63,7 @@ export function JeromeButton() {
         )}
       >
         <p className="text-sm font-medium">Need help?</p>
-        <p className="text-xs text-muted-foreground">Click to chat with Jerome</p>
+        <p className="text-xs text-muted-foreground">Click to chat with Iris AI</p>
       </div>
     </div>
   );
