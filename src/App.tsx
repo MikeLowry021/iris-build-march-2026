@@ -21,6 +21,7 @@ import ClientDashboard from "./pages/client/ClientDashboard";
 import UploadStatements from "./pages/client/UploadStatements";
 import Transactions from "./pages/client/Transactions";
 import ClientFinancials from "./pages/client/ClientFinancials";
+import FinancialStatements from "./pages/client/FinancialStatements";
 import Payslips from "./pages/client/Payslips";
 
 // Accountant pages
@@ -120,6 +121,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute allowedRoles={['client']}>
             <ClientFinancials />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/client/financial-statements"
+        element={
+          <ProtectedRoute allowedRoles={['client']}>
+            <FinancialStatements />
           </ProtectedRoute>
         }
       />
