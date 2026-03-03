@@ -1,92 +1,22 @@
 
 
-## Screenshot Audit Plan
+## Create docs/screenshots/ README Index
 
-I'll navigate through the entire app using browser tools, capture screenshots of every major screen, and save them to a `docs/screenshots/` folder in the codebase (visible via GitHub).
+Create a single `docs/screenshots/README.md` file that documents all 49 screenshots with filenames and descriptions, organized by section. The user will manually add the actual `.png` files via GitHub.
 
-### Screenshots to capture (~25-30 images):
+### What gets created
 
-**1. Auth**
-- Login page (desktop)
-- Login page (mobile 390px)
+**File:** `docs/screenshots/README.md`
 
-**2. Client Profile**
-- Client Dashboard
-- Upload Statements
-- Transactions
-- Financials
-- Payslips
-- Sidebar fully visible
+Contents will be a markdown document with:
+- Title and audit date
+- Table of all 49 screenshots organized by profile/section
+- Each entry: numbered filename (e.g., `01-login-desktop.png`), description, and what to look for
+- Sections: Auth, Client, CEO, Bookkeeper, Accountant, Admin, Jerome AI, Mobile Views, Stub Routes
 
-**3. CEO Profile**
-- CEO Dashboard
-- Payroll tab
-- Employees tab
-- Tax Summary
-- Reimbursements
-- Business Metrics (charts)
-- Audit Trail
-- Settings
-- Sidebar fully visible
+### Naming convention
+Files follow `##-descriptive-name.png` format, matching the consolidated index from the audit:
+- `01-login-desktop.png` through `49-admin-reports-stub.png`
 
-**4. Bookkeeper Profile**
-- Bookkeeper Dashboard
-- My Clients
-- Transaction Categorization
-- Adjusting Entries
-- Draft Reports
-- Submissions
-
-**5. Accountant Profile**
-- Accountant Dashboard
-- Review Queue
-- Client Review (with sign-off panel)
-- RFI Management
-- Override Entry
-
-**6. Admin Profile**
-- Admin Dashboard
-- User Management
-- Client Management
-- DevOps Monitoring
-- Jerome Admin
-- Audit Logs
-
-**7. Jerome AI**
-- Jerome FAB button (closed)
-- Jerome chat panel (open)
-- Jerome guidance/tips tabs
-
-**8. Mobile Views**
-- Login (390px)
-- One dashboard per profile (390px)
-- Mobile sidebar open
-
-**9. Broken/Empty States**
-- Stub routes (e.g., `/client/tax-status`, `/client/reports`)
-- 404 page
-
-### Technical approach
-- Use `browser--navigate_to_sandbox` to visit each route
-- Use `browser--set_viewport_size` for mobile views
-- Use `browser--screenshot` to capture each screen
-- Save all images to `docs/screenshots/` with descriptive filenames
-- Create a `docs/screenshots/README.md` index file listing every screenshot with description
-
-### Folder structure
-```
-docs/screenshots/
-├── README.md
-├── 01-login-desktop.png
-├── 02-login-mobile.png
-├── 03-client-dashboard.png
-├── 04-client-upload.png
-├── ...
-├── 25-jerome-chat-panel.png
-├── 26-mobile-ceo-dashboard.png
-└── 27-404-page.png
-```
-
-### Limitation
-Browser screenshots are captured as base64 images. I'll save each one to the codebase as a file. This will take multiple sequential steps (navigate → screenshot → save), so the full set will require ~30 iterations. I'll batch where possible.
+No existing files are modified. This is a new directory with one markdown file.
 
