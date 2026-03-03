@@ -1,7 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
+import { BalanceSheetForm } from '@/components/financial/BalanceSheetForm';
+import { ProfitLossForm } from '@/components/financial/ProfitLossForm';
+import { mockBalanceSheet, mockProfitLoss } from '@/lib/financial-mock-data';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -9,14 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   mockMonthlyFinancials, 
@@ -32,11 +28,17 @@ import {
   PiggyBank,
   FileSpreadsheet,
   FileText,
+  ArrowRight,
+  Scale,
+  BarChart3,
+  Coins,
+  BookOpen,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function ClientFinancials() {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [selectedMonth, setSelectedMonth] = useState<string>('January 2026');
   const financials = mockMonthlyFinancials[selectedMonth];
 
@@ -45,7 +47,6 @@ export default function ClientFinancials() {
       title: `Exporting to ${format.toUpperCase()}`,
       description: `Your ${selectedMonth} financial report is being generated...`,
     });
-    // Simulate download delay
     setTimeout(() => {
       toast({
         title: 'Export Complete',
@@ -53,6 +54,8 @@ export default function ClientFinancials() {
       });
     }, 1500);
   };
+
+  const noopSave = () => {};
 
   if (!financials) {
     return (
@@ -82,7 +85,7 @@ export default function ClientFinancials() {
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="page-title">Financial Overview</h1>
+            <h1 className="page-title">Financials</h1>
             <p className="mt-1 text-muted-foreground">
               View your financial statements for {mockClientInfo.company}
             </p>
@@ -176,129 +179,105 @@ export default function ClientFinancials() {
           </Button>
         </div>
 
-        {/* Tabs for Income/Expenses and Bank Reconciliation */}
-        <Tabs defaultValue="breakdown" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="breakdown">Income & Expenses</TabsTrigger>
-            <TabsTrigger value="reconciliation">Bank Reconciliation</TabsTrigger>
+        {/* Financial Statements Callout */}
+        <Card className="border-primary/30 bg-primary/5">
+          <CardContent className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                <FileText className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-foreground">Financial Statements</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Compile Trial Balance, Balance Sheet, Income Statement, Cash Flow, and Statement of Changes in Equity into a complete set of financial statements.
+                </p>
+              </div>
+            </div>
+            <Button variant="hero" onClick={() => navigate('/client/financial-statements')} className="shrink-0">
+              Go to Financial Statements
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* 5-Tab Layout */}
+        <Tabs defaultValue="trial-balance" className="space-y-4">
+          <TabsList className="flex-wrap">
+            <TabsTrigger value="trial-balance">Trial Balance</TabsTrigger>
+            <TabsTrigger value="balance-sheet">Balance Sheet</TabsTrigger>
+            <TabsTrigger value="income-statement">Income Statement</TabsTrigger>
+            <TabsTrigger value="cash-flow">Cash Flow Statement</TabsTrigger>
+            <TabsTrigger value="equity-changes">Statement of Changes in Equity</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="breakdown" className="space-y-6">
-            <div className="grid gap-6 lg:grid-cols-2">
-              {/* Income Breakdown */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <TrendingUp className="h-5 w-5 text-success" />
-                    Income Breakdown
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Category</TableHead>
-                        <TableHead className="text-right">Amount</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {financials.incomeBreakdown.map((item, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{item.category}</TableCell>
-                          <TableCell className="text-right font-medium text-success">
-                            {formatZAR(item.amount)}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                      <TableRow className="border-t-2">
-                        <TableCell className="font-bold">Total</TableCell>
-                        <TableCell className="text-right font-bold text-success">
-                          {formatZAR(financials.totalIncome)}
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
-
-              {/* Expense Breakdown */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <TrendingDown className="h-5 w-5 text-destructive" />
-                    Expense Breakdown
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Category</TableHead>
-                        <TableHead className="text-right">Amount</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {financials.expenseBreakdown.map((item, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{item.category}</TableCell>
-                          <TableCell className="text-right font-medium text-destructive">
-                            {formatZAR(item.amount)}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                      <TableRow className="border-t-2">
-                        <TableCell className="font-bold">Total</TableCell>
-                        <TableCell className="text-right font-bold text-destructive">
-                          {formatZAR(financials.totalExpenses)}
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="reconciliation">
+          <TabsContent value="trial-balance">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Bank Reconciliation</CardTitle>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Scale className="h-5 w-5 text-primary" />
+                  Trial Balance
+                </CardTitle>
+                <CardDescription>
+                  Trial Balance view coming soon — will be populated from categorized transactions and adjusting entries.
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Description</TableHead>
-                        <TableHead className="text-right">Debit (Out)</TableHead>
-                        <TableHead className="text-right">Credit (In)</TableHead>
-                        <TableHead className="text-right">Balance</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {financials.bankReconciliation.map((item, index) => (
-                        <TableRow key={index}>
-                          <TableCell className="whitespace-nowrap">
-                            {new Date(item.date).toLocaleDateString('en-ZA', {
-                              day: 'numeric',
-                              month: 'short',
-                            })}
-                          </TableCell>
-                          <TableCell>{item.description}</TableCell>
-                          <TableCell className="text-right text-destructive">
-                            {item.debit > 0 ? formatZAR(item.debit) : '-'}
-                          </TableCell>
-                          <TableCell className="text-right text-success">
-                            {item.credit > 0 ? formatZAR(item.credit) : '-'}
-                          </TableCell>
-                          <TableCell className="text-right font-medium">
-                            {formatZAR(item.balance)}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                <div className="flex items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 py-16">
+                  <p className="text-sm text-muted-foreground">Trial Balance data will appear here once transactions are categorized.</p>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="balance-sheet" className="animate-fade-in">
+            <BalanceSheetForm
+              data={mockBalanceSheet}
+              onSave={noopSave}
+              readOnly
+            />
+          </TabsContent>
+
+          <TabsContent value="income-statement" className="animate-fade-in">
+            <ProfitLossForm
+              data={mockProfitLoss}
+              onSave={noopSave}
+              readOnly
+            />
+          </TabsContent>
+
+          <TabsContent value="cash-flow">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Coins className="h-5 w-5 text-primary" />
+                  Cash Flow Statement
+                </CardTitle>
+                <CardDescription>
+                  Cash Flow Statement coming soon — will show operating, investing, and financing activities.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 py-16">
+                  <p className="text-sm text-muted-foreground">Cash Flow data will appear here in a future update.</p>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="equity-changes">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <BookOpen className="h-5 w-5 text-primary" />
+                  Statement of Changes in Equity
+                </CardTitle>
+                <CardDescription>
+                  Statement of Changes in Equity coming soon — will track movements in share capital, retained earnings, and reserves.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 py-16">
+                  <p className="text-sm text-muted-foreground">Equity changes data will appear here in a future update.</p>
                 </div>
               </CardContent>
             </Card>
@@ -318,3 +297,9 @@ export default function ClientFinancials() {
     </DashboardLayout>
   );
 }
+
+// NOTE (2026-03-03):
+// - Trial Balance, Cash Flow Statement, and Statement of Changes in Equity are UI stubs.
+// - Balance Sheet and Income Statement tabs use read-only mock data from financial-mock-data.ts.
+// - "Go to Financial Statements" navigates to /client/financial-statements.
+// - Real data + export to PDF/Word/Excel to be wired in a future integration phase.

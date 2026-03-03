@@ -5,8 +5,8 @@ import { ProfitLossForm } from '@/components/financial/ProfitLossForm';
 import { useFinancialPDF } from '@/hooks/useFinancialPDF';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -32,8 +32,6 @@ import {
   mockBalanceSheet, 
   mockProfitLoss, 
   mockFinancialStatement,
-  getStatementStatusLabel,
-  getStatementStatusColor 
 } from '@/lib/financial-mock-data';
 import { StatusBadge } from '@/components/StatusBadge';
 import { 
@@ -43,8 +41,11 @@ import {
   Clock, 
   CheckCircle2,
   AlertCircle,
-  Calculator,
-  TrendingUp
+  Scale,
+  TrendingUp,
+  Coins,
+  BookOpen,
+  StickyNote,
 } from 'lucide-react';
 
 export default function FinancialStatements() {
@@ -59,7 +60,6 @@ export default function FinancialStatements() {
   const [financialYear, setFinancialYear] = useState('2025');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
-  const [activeTab, setActiveTab] = useState('balance-sheet');
 
   const bsTotals = calculateBalanceSheetTotals(balanceSheet);
   const canSubmit = statement.status === 'draft' && bsTotals.isBalanced;
@@ -85,26 +85,21 @@ export default function FinancialStatements() {
       lastModified: new Date().toISOString(),
     }));
     toast({
-      title: 'Profit & Loss Saved',
-      description: 'Your profit & loss statement has been saved as a draft.',
+      title: 'Income Statement Saved',
+      description: 'Your income statement has been saved as a draft.',
     });
   };
 
   const handleSubmitToAccountant = async () => {
     setIsSubmitting(true);
-    
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
     setStatement(prev => ({
       ...prev,
       status: 'submitted',
       submittedAt: new Date().toISOString(),
     }));
-    
     setIsSubmitting(false);
     setShowSubmitDialog(false);
-    
     toast({
       title: 'Submitted Successfully',
       description: 'Your financial statements have been submitted for review.',
@@ -118,7 +113,6 @@ export default function FinancialStatements() {
       balanceSheet: type === 'profit-loss' ? undefined : balanceSheet,
       profitLoss: type === 'balance-sheet' ? undefined : profitLoss,
     });
-    
     toast({
       title: 'PDF Generated',
       description: 'Your financial report has been generated. Check your browser for the print dialog.',
@@ -140,6 +134,25 @@ export default function FinancialStatements() {
         return null;
     }
   };
+
+  const isEditable = statement.status === 'draft' || statement.status === 'rejected';
+
+  const StubSection = ({ title, description, icon: Icon }: { title: string; description: string; icon: React.ElementType }) => (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Icon className="h-5 w-5 text-primary" />
+          {title}
+        </CardTitle>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 py-16">
+          <p className="text-sm text-muted-foreground">This section will be populated in a future update.</p>
+        </div>
+      </CardContent>
+    </Card>
+  );
 
   return (
     <DashboardLayout>
@@ -202,7 +215,7 @@ export default function FinancialStatements() {
                 <SelectContent>
                   <SelectItem value="all">Full Report</SelectItem>
                   <SelectItem value="balance-sheet">Balance Sheet Only</SelectItem>
-                  <SelectItem value="profit-loss">Profit & Loss Only</SelectItem>
+                  <SelectItem value="profit-loss">Income Statement Only</SelectItem>
                 </SelectContent>
               </Select>
               <Button 
@@ -242,37 +255,83 @@ export default function FinancialStatements() {
           )}
         </div>
 
-        {/* Financial Statement Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 max-w-md">
-            <TabsTrigger value="balance-sheet" className="flex items-center gap-2">
-              <Calculator className="h-4 w-4" />
-              Balance Sheet
-            </TabsTrigger>
-            <TabsTrigger value="profit-loss" className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" />
-              Profit & Loss
-            </TabsTrigger>
-          </TabsList>
+        {/* Summary Info Section */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Statement Summary</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div>
+                <p className="text-xs text-muted-foreground">Company Name</p>
+                <p className="text-sm font-medium">{user?.company || 'Company Name'}</p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">Financial Year</p>
+                <p className="text-sm font-medium">FY {financialYear}</p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">Prepared By</p>
+                <p className="text-sm font-medium text-muted-foreground">Accountant (TBC)</p>
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">Bank Name</p>
+                <p className="text-sm font-medium text-muted-foreground">Bank (TBC)</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-          <TabsContent value="balance-sheet" className="animate-fade-in">
+        {/* 6 Sections as vertical card list */}
+        <div className="space-y-6">
+          {/* 1. Trial Balance */}
+          <StubSection
+            title="Trial Balance"
+            description="Trial Balance view coming soon — will be populated from categorized transactions and adjusting entries."
+            icon={Scale}
+          />
+
+          {/* 2. Balance Sheet */}
+          <div>
             <BalanceSheetForm
               data={balanceSheet}
               onSave={handleSaveBalanceSheet}
               isSubmitting={isSubmitting}
-              readOnly={statement.status !== 'draft' && statement.status !== 'rejected'}
+              readOnly={!isEditable}
             />
-          </TabsContent>
+          </div>
 
-          <TabsContent value="profit-loss" className="animate-fade-in">
+          {/* 3. Income Statement */}
+          <div>
             <ProfitLossForm
               data={profitLoss}
               onSave={handleSaveProfitLoss}
               isSubmitting={isSubmitting}
-              readOnly={statement.status !== 'draft' && statement.status !== 'rejected'}
+              readOnly={!isEditable}
             />
-          </TabsContent>
-        </Tabs>
+          </div>
+
+          {/* 4. Cash Flow Statement */}
+          <StubSection
+            title="Cash Flow Statement"
+            description="Cash Flow Statement coming soon — will show operating, investing, and financing activities."
+            icon={Coins}
+          />
+
+          {/* 5. Statement of Changes in Equity */}
+          <StubSection
+            title="Statement of Changes in Equity"
+            description="Coming soon — will track movements in share capital, retained earnings, and reserves."
+            icon={BookOpen}
+          />
+
+          {/* 6. Notes to the Financial Statements */}
+          <StubSection
+            title="Notes to the Financial Statements"
+            description="Notes and disclosures supporting the financial statements — to be added in a future update."
+            icon={StickyNote}
+          />
+        </div>
       </div>
 
       {/* Submit Confirmation Dialog */}
@@ -314,3 +373,9 @@ export default function FinancialStatements() {
     </DashboardLayout>
   );
 }
+
+// NOTE (2026-03-03):
+// - Trial Balance, Cash Flow Statement, Statement of Changes in Equity, and Notes are UI stubs.
+// - Balance Sheet and Income Statement use editable mock data from financial-mock-data.ts.
+// - "Submit for Review" currently simulates an API call with a 1.5s delay.
+// - Real data + export to PDF/Word/Excel to be wired in a future Supabase integration phase.
