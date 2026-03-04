@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,14 +11,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { mockTransactions, formatCurrency } from '@/lib/mock-data';
-import { 
-  Search, 
-  Filter, 
-  TrendingUp, 
+import {
+  Search,
+  TrendingUp,
   TrendingDown,
   ChevronLeft,
   ChevronRight,
+  Briefcase,
+  ExternalLink,
 } from 'lucide-react';
 
 const categories = [
@@ -29,10 +37,14 @@ const categories = [
   'VAT Receivable',
   'Bank Charges',
   'Salaries',
+  'Salary / Payroll',
   'Other',
 ];
 
+const SALARY_CATEGORIES = ['Salaries', 'Salary / Payroll', 'salary', 'payroll', 'Salary', 'Payroll'];
+
 export default function Transactions() {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
   const [selectedStatus, setSelectedStatus] = useState('all');
@@ -43,6 +55,13 @@ export default function Transactions() {
     const matchesStatus = selectedStatus === 'all' || t.status === selectedStatus;
     return matchesSearch && matchesCategory && matchesStatus;
   });
+
+  // NOTE (2026-03-04): Salary/payroll transactions link to Payslips page.
+  // Banner and row links are additive — existing category and filter
+  // logic is unchanged.
+  const salaryTransactions = filteredTransactions.filter(
+    t => t.category && SALARY_CATEGORIES.includes(t.category)
+  );
 
   return (
     <DashboardLayout>
@@ -91,6 +110,26 @@ export default function Transactions() {
             </SelectContent>
           </Select>
         </div>
+
+        {salaryTransactions.length > 0 && (
+          <div className="flex items-center justify-between rounded-lg border border-primary/20 bg-primary/5 px-4 py-3">
+            <div className="flex items-center gap-2">
+              <Briefcase className="h-4 w-4 text-primary shrink-0" />
+              <p className="text-sm text-foreground">
+                <span className="font-medium">{salaryTransactions.length}</span> salary transaction{salaryTransactions.length !== 1 ? 's' : ''} this period — view payslips for full deduction breakdown
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="ml-4 shrink-0 text-primary border-primary/30 hover:bg-primary/10"
+              onClick={() => navigate('/client/payslips')}
+            >
+              Go to Payslips
+              <ExternalLink className="ml-1 h-3 w-3" />
+            </Button>
+          </div>
+        )}
 
         {/* Summary cards */}
         <div className="grid gap-4 sm:grid-cols-3">
@@ -204,7 +243,27 @@ export default function Transactions() {
                       </span>
                     </td>
                     <td className="px-4 py-4 text-center">
-                      <StatusBadge status={transaction.status} />
+                      <div className="flex flex-col items-center gap-1">
+                        <StatusBadge status={transaction.status} />
+                        {transaction.category && SALARY_CATEGORIES.includes(transaction.category) && (
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <button
+                                  onClick={() => navigate('/client/payslips')}
+                                  className="flex items-center gap-1 text-xs text-primary hover:underline"
+                                >
+                                  View Payslip
+                                  <ExternalLink className="h-3 w-3" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>View related payslip</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}

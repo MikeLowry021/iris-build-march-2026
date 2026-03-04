@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,17 +26,26 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { mockPayslips, formatZAR, mockClientInfo } from '@/lib/client-mock-data';
-import { 
-  Download, 
+import {
+  Download,
   FileText,
   Users,
   Mail,
   Info,
+  Link2,
+  ExternalLink,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function Payslips() {
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [selectedMonth, setSelectedMonth] = useState<string>('all');
   const [selectedPayslip, setSelectedPayslip] = useState<typeof mockPayslips[0] | null>(null);
@@ -88,6 +98,27 @@ export default function Payslips() {
               </SelectContent>
             </Select>
           </div>
+        </div>
+
+        {/* NOTE (2026-03-04): Transaction source banner links back to
+            Transactions page. Row indicators are additive — existing detail
+            modal and download logic are unchanged. */}
+        <div className="flex items-center justify-between rounded-lg border border-primary/20 bg-primary/5 px-4 py-3">
+          <div className="flex items-center gap-2">
+            <Link2 className="h-4 w-4 text-primary shrink-0" />
+            <p className="text-sm text-foreground">
+              Salary transactions for this period have been categorized in your transaction ledger.
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="ml-4 shrink-0 text-primary border-primary/30 hover:bg-primary/10"
+            onClick={() => navigate('/client/transactions')}
+          >
+            View in Transactions
+            <ExternalLink className="ml-1 h-3 w-3" />
+          </Button>
         </div>
 
         {/* Employee Summary Cards */}
@@ -163,15 +194,33 @@ export default function Payslips() {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
-                            <Button 
-                              variant="ghost" 
+                            {payslip.status === 'generated' && (
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => navigate('/client/transactions')}
+                                    >
+                                      <Link2 className="h-4 w-4 text-primary" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Salary transaction recorded in transactions ledger</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            )}
+                            <Button
+                              variant="ghost"
                               size="sm"
                               onClick={() => setSelectedPayslip(payslip)}
                             >
                               <Info className="h-4 w-4" />
                             </Button>
-                            <Button 
-                              variant="outline" 
+                            <Button
+                              variant="outline"
                               size="sm"
                               onClick={() => handleDownload(payslip)}
                               disabled={payslip.status !== 'generated'}
