@@ -1,55 +1,42 @@
 
 
-## Restructure Client Financials + Wire Financial Statements Route
+## Rewrite FinancialStatements.tsx — Professional IFRS-aligned Financial Pack
 
-Three files to modify, one route to add. No changes to any other profile.
+Complete rewrite of `src/pages/client/FinancialStatements.tsx` with all 10 sections from the prompt. Single file change, no other files touched.
 
-### File 1: `src/pages/client/ClientFinancials.tsx` — Full rewrite of tab structure
+### Structure
 
-**Current state:** 2 tabs ("Income & Expenses", "Bank Reconciliation") with summary cards and export buttons above.
+The page will contain these sections in order, all using hardcoded mock data for Mokwena Trading:
 
-**New structure:**
-- Keep the page header but change title from "Financial Overview" to "Financials"
-- Keep the 4 summary cards (Total Income, Total Expenses, Net Profit, Cash on Hand) and export buttons as-is
-- **Add a "Financial Statements" callout card** below the export buttons:
-  - Card with `FileText` icon, title "Financial Statements", description about compiling the full pack
-  - Primary "hero" button: "Go to Financial Statements" → `useNavigate('/client/financial-statements')`
-- **Replace the 2-tab layout** with 5 tabs in this exact order:
-  1. "Trial Balance" — stub placeholder card
-  2. "Balance Sheet" — reuses existing `BalanceSheetForm` from financial components (read-only, using `mockBalanceSheet`)
-  3. "Income Statement" — reuses existing `ProfitLossForm` (read-only, using `mockProfitLoss`)
-  4. "Cash Flow Statement" — stub placeholder card
-  5. "Statement of Changes in Equity" — stub placeholder card
-- The existing income/expense breakdown tables and bank reconciliation table are removed from this view (they were the old tabs)
-- Add developer note comment at bottom
+1. **Cover/Header Card** — Company details, "DRAFT — MOCK DATA" amber badge, teal left border
+2. **Export Action Bar** — 3 buttons (PDF/Word/Excel) showing toast "coming soon" on click
+3. **Statement of Profit or Loss** — Read-only table with R-prefixed ZAR amounts, bold subtotals
+4. **Statement of Changes in Equity** — 4-column table (Share Capital, Retained Earnings, Total)
+5. **Statement of Financial Position** — Balanced at R873,000; uppercase bold section headers with teal bg
+6. **Statement of Cash Flows (Indirect)** — Closing cash R117,000 matching SOFP
+7. **Notes to Financial Statements** — 6 accordion items using shadcn Accordion, collapsed by default
+8. **Analytical Review** — 4 metric cards (GP Margin 40%, Current Ratio 7.75, D/E 0.36, NP Margin 15.3%)
+9. **Review & Sign-off Status** — 4 role rows with coloured badges, disabled "Submit for Sign-off" button with tooltip
+10. **Developer note comment** at bottom
 
-**Imports to add:** `useNavigate` from react-router-dom, `BalanceSheetForm`, `ProfitLossForm`, `mockBalanceSheet`, `mockProfitLoss` from existing files. Remove unused `Table*` imports and `bankReconciliation`-related code.
+### Technical details
 
-### File 2: `src/pages/client/FinancialStatements.tsx` — Reshape into Doc's full-pack scaffold
+- Remove all existing state management, BalanceSheetForm/ProfitLossForm imports, submit dialog, and PDF export logic — the page becomes entirely read-only with hardcoded mock data
+- Import `Accordion, AccordionItem, AccordionTrigger, AccordionContent` from shadcn
+- Import `Tooltip, TooltipContent, TooltipProvider, TooltipTrigger` from shadcn for the disabled button tooltip
+- Import `toast` from `sonner` for export button toasts
+- Import `Badge` from shadcn for the DRAFT badge and sign-off status badges
+- Keep `DashboardLayout` wrapper
+- All amounts formatted with `R` prefix and space-separated thousands using a local helper function
+- Cross-checks embedded as comments: Assets = Equity + Liabilities = R873,000; Closing cash = R117,000; Closing equity = R640,800
 
-**Current state:** Has Balance Sheet + P&L tabs with submit-to-accountant flow.
-
-**New structure:**
-- Keep `DashboardLayout`, page title "Financial Statements", FY selector, status card, submit button, and dialog — all unchanged
-- **Add a summary info section** below the status card: read-only fields for Company Name, Financial Year, Prepared By (placeholder), Bank Name (placeholder)
-- **Replace the 2-tab layout** with 6 sections rendered as cards in a vertical list:
-  1. "Trial Balance" — stub card
-  2. "Balance Sheet" — keeps existing `BalanceSheetForm` (editable, as it is now)
-  3. "Income Statement" — keeps existing `ProfitLossForm` (editable, renamed from "Profit & Loss")
-  4. "Cash Flow Statement" — stub card
-  5. "Statement of Changes in Equity" — stub card
-  6. "Notes to the Financial Statements" — stub card
-- Add developer note comment at bottom
-
-### File 3: `src/App.tsx` — Add route
-
-- Add `import FinancialStatements from "./pages/client/FinancialStatements";` alongside other client imports (line ~24)
-- Add a new `<Route>` for `/client/financial-statements` wrapped in `<ProtectedRoute allowedRoles={['client']}>`, placed after the `/client/financials` route block
+### What is removed
+- `BalanceSheetForm` and `ProfitLossForm` component usage (replaced by hardcoded read-only tables)
+- `useFinancialPDF` hook, `useAuth`, `useToast`, all state variables, submit dialog
+- All imports from `financial-types` and `financial-mock-data`
+- The old `StubSection` helper component
 
 ### What is NOT touched
-- No CEO, Bookkeeper, Accountant, Admin, or Jerome files
-- No mock data files
-- No existing component files (BalanceSheetForm, ProfitLossForm, CurrencyInput)
-- No navigation-config changes (sidebar items stay the same)
-- Client dashboard, transactions, payslips pages unchanged
+- No other files
+- No routes, no other pages, no components, no mock data files
 
