@@ -21,7 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { ArrowRight, CheckCircle, Clock } from 'lucide-react';
+import { ArrowRight, CircleCheck as CheckCircle, Clock } from 'lucide-react';
 
 const riskItems = [
   'Entity and environment understood',

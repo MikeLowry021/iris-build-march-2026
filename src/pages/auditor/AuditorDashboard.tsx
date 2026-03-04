@@ -17,13 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  PlayCircle,
-  Clock,
-  CheckCircle,
-  AlertCircle,
-  ArrowRight,
-} from 'lucide-react';
+import { CirclePlay as PlayCircle, Clock, CircleCheck as CheckCircle, CircleAlert as AlertCircle, ArrowRight } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const stats = [

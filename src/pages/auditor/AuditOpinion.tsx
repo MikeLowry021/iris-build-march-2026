@@ -18,7 +18,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { CheckCircle, MessageSquare } from 'lucide-react';
+import { CircleCheck as CheckCircle, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type OpinionType = 'unmodified' | 'qualified' | 'adverse';
