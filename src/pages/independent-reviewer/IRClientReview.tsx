@@ -23,7 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { ArrowRight, CheckCircle } from 'lucide-react';
+import { ArrowRight, CircleCheck as CheckCircle } from 'lucide-react';
 
 const analyticalRows = [
   { item: 'Revenue', current: 'R4,600,000', prior: 'R4,100,000', movement: '+12.2%' },

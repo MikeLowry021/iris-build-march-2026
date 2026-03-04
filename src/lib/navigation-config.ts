@@ -1,30 +1,4 @@
-import {
-  LayoutDashboard,
-  Upload,
-  Receipt,
-  FileText,
-  Calculator,
-  FileSpreadsheet,
-  HelpCircle,
-  Users,
-  ClipboardCheck,
-  BookOpen,
-  Building2,
-  Shield,
-  Activity,
-  Settings,
-  Database,
-  Bot,
-  PenTool,
-  FileCheck,
-  BarChart3,
-  Send,
-  DollarSign,
-  Briefcase,
-  TrendingUp,
-  History,
-  ShieldCheck,
-} from 'lucide-react';
+import { LayoutDashboard, Upload, Receipt, FileText, Calculator, FileSpreadsheet, CircleHelp as HelpCircle, Users, ClipboardCheck, BookOpen, Building2, Shield, Activity, Settings, Database, Bot, PenTool, FileCheck, ChartBar as BarChart3, Send, DollarSign, Briefcase, TrendingUp, History, ShieldCheck } from 'lucide-react';
 import { UserRole } from '@/lib/types';
 
 export interface NavItem {

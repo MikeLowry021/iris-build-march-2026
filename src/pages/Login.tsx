@@ -8,18 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserRole } from '@/lib/types';
-import {
-  Building2,
-  User,
-  Loader2,
-  ArrowRight,
-  BookOpen,
-  Shield,
-  ShieldCheck,
-  Bot,
-  Mail,
-  Lock
-} from 'lucide-react';
+import { Building2, User, Loader as Loader2, ArrowRight, BookOpen, Shield, ShieldCheck, Bot, Mail, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 

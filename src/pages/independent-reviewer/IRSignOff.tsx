@@ -19,7 +19,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { CheckCircle, MessageSquare } from 'lucide-react';
+import { CircleCheck as CheckCircle, MessageSquare } from 'lucide-react';
 
 export default function IRSignOff() {
   const { toast } = useToast();
