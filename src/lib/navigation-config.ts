@@ -23,6 +23,7 @@ import {
   Briefcase,
   TrendingUp,
   History,
+  ShieldCheck,
 } from 'lucide-react';
 import { UserRole } from '@/lib/types';
 
@@ -88,6 +89,14 @@ export const adminNavItems: NavItem[] = [
   { label: 'Reports', href: '/admin/reports', icon: BarChart3 },
 ];
 
+export const independentReviewerNavItems: NavItem[] = [
+  { label: 'Dashboard', href: '/independent-reviewer/dashboard', icon: LayoutDashboard },
+  { label: 'Review Queue', href: '/independent-reviewer/review-queue', icon: ClipboardCheck },
+  { label: 'Client Review', href: '/independent-reviewer/client-review', icon: FileText },
+  { label: 'Sign-Off', href: '/independent-reviewer/sign-off', icon: ShieldCheck },
+  { label: 'Reports', href: '/independent-reviewer/reports', icon: BarChart3 },
+];
+
 export function getNavItemsForRole(role: UserRole | undefined): NavItem[] {
   switch (role) {
     case 'admin':
@@ -98,6 +107,8 @@ export function getNavItemsForRole(role: UserRole | undefined): NavItem[] {
       return bookkeeperNavItems;
     case 'ceo':
       return ceoNavItems;
+    case 'independent-reviewer':
+      return independentReviewerNavItems;
     case 'client':
     default:
       return clientNavItems;
@@ -114,6 +125,8 @@ export function getPortalLabelForRole(role: UserRole | undefined): string {
       return 'Bookkeeper Portal';
     case 'ceo':
       return 'CEO Portal';
+    case 'independent-reviewer':
+      return 'Independent Reviewer Portal';
     case 'client':
     default:
       return 'Client Portal';
@@ -130,6 +143,8 @@ export function getDashboardPathForRole(role: UserRole | undefined): string {
       return '/bookkeeper';
     case 'ceo':
       return '/ceo';
+    case 'independent-reviewer':
+      return '/independent-reviewer/dashboard';
     case 'client':
     default:
       return '/client';

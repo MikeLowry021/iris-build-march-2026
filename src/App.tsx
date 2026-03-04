@@ -63,6 +63,13 @@ import CEOMetrics from "./pages/ceo/CEOMetrics";
 import CEOAuditTrail from "./pages/ceo/CEOAuditTrail";
 import CEOSettings from "./pages/ceo/CEOSettings";
 
+// Independent Reviewer pages
+import IRDashboard from "./pages/independent-reviewer/IRDashboard";
+import IRReviewQueue from "./pages/independent-reviewer/IRReviewQueue";
+import IRClientReview from "./pages/independent-reviewer/IRClientReview";
+import IRSignOff from "./pages/independent-reviewer/IRSignOff";
+import IRReports from "./pages/independent-reviewer/IRReports";
+
 const queryClient = new QueryClient();
 
 // Protected route wrapper with role-based access control
@@ -389,6 +396,14 @@ function AppRoutes() {
       <Route path="/ceo/metrics" element={<ProtectedRoute allowedRoles={['ceo']}><CEOMetrics /></ProtectedRoute>} />
       <Route path="/ceo/audit" element={<ProtectedRoute allowedRoles={['ceo']}><CEOAuditTrail /></ProtectedRoute>} />
       <Route path="/ceo/settings" element={<ProtectedRoute allowedRoles={['ceo']}><CEOSettings /></ProtectedRoute>} />
+
+      {/* Independent Reviewer routes */}
+      <Route path="/independent-reviewer" element={<Navigate to="/independent-reviewer/dashboard" replace />} />
+      <Route path="/independent-reviewer/dashboard" element={<ProtectedRoute allowedRoles={['independent-reviewer']}><IRDashboard /></ProtectedRoute>} />
+      <Route path="/independent-reviewer/review-queue" element={<ProtectedRoute allowedRoles={['independent-reviewer']}><IRReviewQueue /></ProtectedRoute>} />
+      <Route path="/independent-reviewer/client-review" element={<ProtectedRoute allowedRoles={['independent-reviewer']}><IRClientReview /></ProtectedRoute>} />
+      <Route path="/independent-reviewer/sign-off" element={<ProtectedRoute allowedRoles={['independent-reviewer']}><IRSignOff /></ProtectedRoute>} />
+      <Route path="/independent-reviewer/reports" element={<ProtectedRoute allowedRoles={['independent-reviewer']}><IRReports /></ProtectedRoute>} />
 
       {/* Global settings route */}
       <Route

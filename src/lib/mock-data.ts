@@ -29,6 +29,13 @@ export const mockUsers: User[] = [
     role: 'admin',
     company: 'Iris Partners',
   },
+  {
+    id: '5',
+    email: 'n.mthembu@iris.co.za',
+    name: 'Dr. N. Mthembu',
+    role: 'independent-reviewer',
+    company: 'Mthembu Review Services',
+  },
 ];
 
 export const mockClientStatusCards: StatusCard[] = [
