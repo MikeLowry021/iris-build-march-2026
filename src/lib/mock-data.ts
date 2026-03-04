@@ -36,6 +36,13 @@ export const mockUsers: User[] = [
     role: 'independent-reviewer',
     company: 'Mthembu Review Services',
   },
+  {
+    id: '6',
+    email: 'p.vandermerwe@iris.co.za',
+    name: 'P. van der Merwe (RA)',
+    role: 'auditor',
+    company: 'Van der Merwe Registered Auditors',
+  },
 ];
 
 export const mockClientStatusCards: StatusCard[] = [

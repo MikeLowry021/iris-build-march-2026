@@ -1,4 +1,4 @@
-import { LayoutDashboard, Upload, Receipt, FileText, Calculator, FileSpreadsheet, CircleHelp as HelpCircle, Users, ClipboardCheck, BookOpen, Building2, Shield, Activity, Settings, Database, Bot, PenTool, FileCheck, ChartBar as BarChart3, Send, DollarSign, Briefcase, TrendingUp, History, ShieldCheck } from 'lucide-react';
+import { LayoutDashboard, Upload, Receipt, FileText, Calculator, FileSpreadsheet, CircleHelp as HelpCircle, Users, ClipboardCheck, BookOpen, Building2, Shield, Activity, Settings, Database, Bot, PenTool, FileCheck, ChartBar as BarChart3, Send, DollarSign, Briefcase, TrendingUp, History, ShieldCheck, Stamp } from 'lucide-react';
 import { UserRole } from '@/lib/types';
 
 export interface NavItem {
@@ -71,6 +71,14 @@ export const independentReviewerNavItems: NavItem[] = [
   { label: 'Reports', href: '/independent-reviewer/reports', icon: BarChart3 },
 ];
 
+export const auditorNavItems: NavItem[] = [
+  { label: 'Dashboard', href: '/auditor/dashboard', icon: LayoutDashboard },
+  { label: 'Audit Queue', href: '/auditor/audit-queue', icon: ClipboardCheck },
+  { label: 'Client Audit', href: '/auditor/client-audit', icon: FileText },
+  { label: 'Audit Opinion', href: '/auditor/audit-opinion', icon: Stamp },
+  { label: 'Reports', href: '/auditor/reports', icon: BarChart3 },
+];
+
 export function getNavItemsForRole(role: UserRole | undefined): NavItem[] {
   switch (role) {
     case 'admin':
@@ -83,6 +91,8 @@ export function getNavItemsForRole(role: UserRole | undefined): NavItem[] {
       return ceoNavItems;
     case 'independent-reviewer':
       return independentReviewerNavItems;
+    case 'auditor':
+      return auditorNavItems;
     case 'client':
     default:
       return clientNavItems;
@@ -101,6 +111,8 @@ export function getPortalLabelForRole(role: UserRole | undefined): string {
       return 'CEO Portal';
     case 'independent-reviewer':
       return 'Independent Reviewer Portal';
+    case 'auditor':
+      return 'Auditor Portal';
     case 'client':
     default:
       return 'Client Portal';
@@ -119,6 +131,8 @@ export function getDashboardPathForRole(role: UserRole | undefined): string {
       return '/ceo';
     case 'independent-reviewer':
       return '/independent-reviewer/dashboard';
+    case 'auditor':
+      return '/auditor/dashboard';
     case 'client':
     default:
       return '/client';

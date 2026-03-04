@@ -8,7 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserRole } from '@/lib/types';
-import { Building2, User, Loader as Loader2, ArrowRight, BookOpen, Shield, ShieldCheck, Bot, Mail, Lock } from 'lucide-react';
+import { Building2, User, Loader as Loader2, ArrowRight, BookOpen, Shield, ShieldCheck, Stamp, Bot, Mail, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 
@@ -19,6 +19,7 @@ const demoProfiles: { role: UserRole; label: string; icon: React.ElementType; em
   { role: 'bookkeeper', label: 'Bookkeeper', icon: BookOpen, email: 'bookkeeper@iris.demo' },
   { role: 'accountant', label: 'Accountant', icon: Building2, email: 'accountant@iris.demo' },
   { role: 'independent-reviewer', label: 'Ind. Reviewer', icon: ShieldCheck, email: 'n.mthembu@iris.co.za' },
+  { role: 'auditor', label: 'Auditor', icon: Stamp, email: 'p.vandermerwe@iris.co.za' },
   { role: 'ceo', label: 'CEO', icon: Briefcase, email: 'ceo@iris.demo' },
   { role: 'admin', label: 'Admin', icon: Shield, email: 'admin@iris.demo' },
 ];
@@ -40,6 +41,7 @@ export default function Login() {
       case 'accountant': return '/accountant';
       case 'bookkeeper': return '/bookkeeper';
       case 'independent-reviewer': return '/independent-reviewer/dashboard';
+      case 'auditor': return '/auditor/dashboard';
       case 'client': return '/client';
       default: return '/client';
     }
@@ -63,6 +65,7 @@ export default function Login() {
       else if (email.includes('accountant')) role = 'accountant';
       else if (email.includes('bookkeeper')) role = 'bookkeeper';
       else if (email.includes('mthembu') || email.includes('reviewer')) role = 'independent-reviewer';
+      else if (email.includes('vandermerwe') || email.includes('auditor')) role = 'auditor';
       
       const success = await login(email, password, role);
       if (success) {

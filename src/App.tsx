@@ -70,6 +70,13 @@ import IRClientReview from "./pages/independent-reviewer/IRClientReview";
 import IRSignOff from "./pages/independent-reviewer/IRSignOff";
 import IRReports from "./pages/independent-reviewer/IRReports";
 
+// Auditor pages
+import AuditorDashboard from "./pages/auditor/AuditorDashboard";
+import AuditQueue from "./pages/auditor/AuditQueue";
+import ClientAudit from "./pages/auditor/ClientAudit";
+import AuditOpinion from "./pages/auditor/AuditOpinion";
+import AuditorReports from "./pages/auditor/AuditorReports";
+
 const queryClient = new QueryClient();
 
 // Protected route wrapper with role-based access control
@@ -404,6 +411,14 @@ function AppRoutes() {
       <Route path="/independent-reviewer/client-review" element={<ProtectedRoute allowedRoles={['independent-reviewer']}><IRClientReview /></ProtectedRoute>} />
       <Route path="/independent-reviewer/sign-off" element={<ProtectedRoute allowedRoles={['independent-reviewer']}><IRSignOff /></ProtectedRoute>} />
       <Route path="/independent-reviewer/reports" element={<ProtectedRoute allowedRoles={['independent-reviewer']}><IRReports /></ProtectedRoute>} />
+
+      {/* Auditor routes */}
+      <Route path="/auditor" element={<Navigate to="/auditor/dashboard" replace />} />
+      <Route path="/auditor/dashboard" element={<ProtectedRoute allowedRoles={['auditor']}><AuditorDashboard /></ProtectedRoute>} />
+      <Route path="/auditor/audit-queue" element={<ProtectedRoute allowedRoles={['auditor']}><AuditQueue /></ProtectedRoute>} />
+      <Route path="/auditor/client-audit" element={<ProtectedRoute allowedRoles={['auditor']}><ClientAudit /></ProtectedRoute>} />
+      <Route path="/auditor/audit-opinion" element={<ProtectedRoute allowedRoles={['auditor']}><AuditOpinion /></ProtectedRoute>} />
+      <Route path="/auditor/reports" element={<ProtectedRoute allowedRoles={['auditor']}><AuditorReports /></ProtectedRoute>} />
 
       {/* Global settings route */}
       <Route
