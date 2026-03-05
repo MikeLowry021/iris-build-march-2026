@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import irisAvatar from '@/assets/iris-avatar.png';
 
 interface JeromeAvatarProps {
   size?: 'sm' | 'md' | 'lg';
@@ -13,22 +14,15 @@ export function JeromeAvatar({ size = 'md', className, showLabel = false }: Jero
     lg: 'h-14 w-14',
   };
 
-  const textSizes = {
-    sm: 'text-sm',
-    md: 'text-lg',
-    lg: 'text-2xl',
-  };
-
   return (
     <div className={cn('flex items-center gap-2', className)}>
       <div
         className={cn(
-          'flex items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-lg font-bold',
-          sizeClasses[size],
-          textSizes[size]
+          'flex items-center justify-center rounded-full shadow-lg overflow-hidden',
+          sizeClasses[size]
         )}
       >
-        J
+        <img src={irisAvatar} alt="Iris AI" className="w-full h-full object-cover" />
       </div>
       {showLabel && (
         <div className="flex flex-col">
