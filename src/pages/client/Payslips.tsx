@@ -219,15 +219,27 @@ export default function Payslips() {
                             >
                               <Info className="h-4 w-4" />
                             </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleDownload(payslip)}
-                              disabled={payslip.status !== 'generated'}
-                            >
-                              <Download className="mr-1 h-4 w-4" />
-                              PDF
-                            </Button>
+                            {/* NOTE (2026-03-10): Download disabled — PDF generation in production phase */}
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span>
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      disabled={true}
+                                      className="cursor-not-allowed opacity-50"
+                                    >
+                                      <Download className="mr-1 h-4 w-4" />
+                                      PDF
+                                    </Button>
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>PDF downloads will be enabled in the production build</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                           </div>
                         </TableCell>
                       </TableRow>
@@ -290,10 +302,25 @@ export default function Payslips() {
                   <span className="text-success">{formatZAR(selectedPayslip.netPay)}</span>
                 </div>
               </div>
-              <Button className="w-full" onClick={() => handleDownload(selectedPayslip)}>
-                <Download className="mr-2 h-4 w-4" />
-                Download PDF
-              </Button>
+              {/* NOTE (2026-03-10): Download disabled — PDF generation in production phase */}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="w-full">
+                      <Button
+                        className="w-full cursor-not-allowed opacity-50"
+                        disabled={true}
+                      >
+                        <Download className="mr-2 h-4 w-4" />
+                        Download PDF
+                      </Button>
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>PDF downloads will be enabled in the production build</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           )}
         </DialogContent>

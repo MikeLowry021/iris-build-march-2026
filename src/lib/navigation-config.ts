@@ -47,7 +47,8 @@ export const accountantNavItems: NavItem[] = [
   { label: 'RFI Management', href: '/accountant/rfi', icon: HelpCircle },
   { label: 'Override Entries', href: '/accountant/override', icon: PenTool },
   { label: 'IT14SD', href: '/accountant/it14sd', icon: Calculator },
-  { label: 'Reports', href: '/accountant/reports', icon: BarChart3 },
+  // NOTE (2026-03-10): Renamed from "Reports" to "Financial Reports" per Doc review
+  { label: 'Financial Reports', href: '/accountant/reports', icon: BarChart3 },
   { label: 'Settings', href: '/accountant/settings', icon: Settings },
 ];
 
