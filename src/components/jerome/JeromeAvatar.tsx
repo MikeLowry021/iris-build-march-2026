@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import irisIcon from '@/assets/iris-icon-new.png';
 
 interface JeromeAvatarProps {
   size?: 'sm' | 'md' | 'lg';
@@ -13,22 +14,15 @@ export function JeromeAvatar({ size = 'md', className, showLabel = false }: Jero
     lg: 'h-14 w-14',
   };
 
-  const textSizes = {
-    sm: 'text-sm',
-    md: 'text-lg',
-    lg: 'text-2xl',
-  };
-
   return (
     <div className={cn('flex items-center gap-2', className)}>
-      <div
-        className={cn(
-          'flex items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-lg font-bold',
-          sizeClasses[size],
-          textSizes[size]
-        )}
-      >
-        J
+      {/* NOTE (2026-03-11): Iris icon asset replacing AuditNex/Jerome branding. Avatar "J" initial replaced with iris-icon.png. */}
+      <div className={cn('rounded-full overflow-hidden shadow-lg', sizeClasses[size])}>
+        <img
+          src={irisIcon}
+          alt="Iris AI"
+          className="w-full h-full object-cover"
+        />
       </div>
       {showLabel && (
         <div className="flex flex-col">
