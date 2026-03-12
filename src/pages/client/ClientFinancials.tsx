@@ -20,20 +20,7 @@ import {
   formatZAR,
   mockClientInfo 
 } from '@/lib/client-mock-data';
-import { 
-  Download, 
-  TrendingUp, 
-  TrendingDown,
-  Wallet,
-  PiggyBank,
-  FileSpreadsheet,
-  FileText,
-  ArrowRight,
-  Scale,
-  BarChart3,
-  Coins,
-  BookOpen,
-} from 'lucide-react';
+import { Download, TrendingUp, TrendingDown, Wallet, PiggyBank, FileSpreadsheet, FileText, ArrowRight, Scale, ChartBar as BarChart3, Coins, BookOpen } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function ClientFinancials() {
