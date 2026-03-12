@@ -58,6 +58,7 @@ export default function RFIManagement() {
   const [newRFI, setNewRFI] = useState({
     clientId: '',
     type: 'clarification' as RFIType,
+    recipient: 'client' as 'client' | 'bookkeeper' | 'both',
     issue: '',
     message: '',
     attachedAccount: '',
@@ -78,10 +79,10 @@ export default function RFIManagement() {
 
     toast({
       title: 'RFI Sent',
-      description: 'The bookkeeper has been notified of your request.',
+      description: 'The recipient(s) have been notified of your request.',
     });
     setIsDialogOpen(false);
-    setNewRFI({ clientId: '', type: 'clarification', issue: '', message: '', attachedAccount: '' });
+    setNewRFI({ clientId: '', type: 'clarification', recipient: 'client', issue: '', message: '', attachedAccount: '' });
   };
 
   const RFICard = ({ rfi }: { rfi: RFI }) => {
@@ -232,6 +233,23 @@ export default function RFIManagement() {
                       <SelectItem value="error">Error - Requires correction</SelectItem>
                       <SelectItem value="warning">Warning - Potential issue</SelectItem>
                       <SelectItem value="clarification">Clarification - Need more info</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="recipient">Recipient *</Label>
+                  <Select
+                    value={newRFI.recipient}
+                    onValueChange={(v) => setNewRFI({ ...newRFI, recipient: v as 'client' | 'bookkeeper' | 'both' })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="client">Client</SelectItem>
+                      <SelectItem value="bookkeeper">Bookkeeper</SelectItem>
+                      <SelectItem value="both">Both — Client & Bookkeeper</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

@@ -467,6 +467,9 @@ export const mockCEOTaxSummary: CEOTaxSummary = {
     { item: 'UIF contributions current', status: 'passed' },
     { item: 'SDL contributions current', status: 'passed' },
     { item: 'VAT returns filed (if registered)', status: 'passed' },
+    { item: 'Provisional Tax — Period 1 (August)', status: 'passed', details: 'Paid | R 32 200 | Due: 31 Aug' },
+    { item: 'Provisional Tax — Period 2 (February)', status: 'passed', details: 'Paid | R 32 200 | Due: 28 Feb' },
+    { item: 'Provisional Tax — Period 3 / Top-up (Optional)', status: 'warning', details: 'Not Required | — | Due: 30 Sep' },
     { item: 'Section 30A Withholding Tax', status: 'warning', details: 'Verify contractor payments >R50k' },
   ],
   taxSavingSuggestions: [
