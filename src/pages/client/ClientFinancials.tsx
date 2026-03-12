@@ -200,14 +200,14 @@ export default function ClientFinancials() {
           </CardContent>
         </Card>
 
-        {/* 5-Tab Layout */}
+        {/* NOTE (2026-03-12): Cash Flow + SOCIE removed from Client view per Doc review. Notes tab added. These statements are Accountant-level only. */}
+        {/* 4-Tab Layout */}
         <Tabs defaultValue="trial-balance" className="space-y-4">
           <TabsList className="flex-wrap">
             <TabsTrigger value="trial-balance">Trial Balance</TabsTrigger>
             <TabsTrigger value="balance-sheet">Balance Sheet</TabsTrigger>
             <TabsTrigger value="income-statement">Income Statement</TabsTrigger>
-            <TabsTrigger value="cash-flow">Cash Flow Statement</TabsTrigger>
-            <TabsTrigger value="equity-changes">Statement of Changes in Equity</TabsTrigger>
+            <TabsTrigger value="notes">Notes to Financial Statements</TabsTrigger>
           </TabsList>
 
           <TabsContent value="trial-balance">
@@ -245,39 +245,84 @@ export default function ClientFinancials() {
             />
           </TabsContent>
 
-          <TabsContent value="cash-flow">
+          <TabsContent value="notes" className="animate-fade-in">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
-                  <Coins className="h-5 w-5 text-primary" />
-                  Cash Flow Statement
+                  <FileText className="h-5 w-5 text-primary" />
+                  Notes to Financial Statements
                 </CardTitle>
                 <CardDescription>
-                  Cash Flow Statement coming soon — will show operating, investing, and financing activities.
+                  Supporting notes to the financial statements
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 py-16">
-                  <p className="text-sm text-muted-foreground">Cash Flow data will appear here in a future update.</p>
+              <CardContent className="space-y-8">
+                <div>
+                  <h3 className="font-semibold text-foreground">Note 1 — Basis of Preparation and Accounting Policies</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    These financial statements have been prepared in accordance with IFRS for SMEs and the Companies Act of South Africa.
+                  </p>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
 
-          <TabsContent value="equity-changes">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <BookOpen className="h-5 w-5 text-primary" />
-                  Statement of Changes in Equity
-                </CardTitle>
-                <CardDescription>
-                  Statement of Changes in Equity coming soon — will track movements in share capital, retained earnings, and reserves.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 py-16">
-                  <p className="text-sm text-muted-foreground">Equity changes data will appear here in a future update.</p>
+                <div>
+                  <h3 className="font-semibold text-foreground">Note 2 — Property, Plant and Equipment</h3>
+                  <div className="mt-4 overflow-x-auto">
+                    <table className="w-full border-collapse text-sm">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="border-r px-4 py-2 text-left font-semibold">Asset</th>
+                          <th className="border-r px-4 py-2 text-left font-semibold">Cost</th>
+                          <th className="border-r px-4 py-2 text-left font-semibold">Accumulated Depreciation</th>
+                          <th className="px-4 py-2 text-left font-semibold">Carrying Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b">
+                          <td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">
+                            (Data to be populated)
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-foreground">Note 3 — Long Term Loans</h3>
+                  <div className="mt-4 overflow-x-auto">
+                    <table className="w-full border-collapse text-sm">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="border-r px-4 py-2 text-left font-semibold">Description</th>
+                          <th className="border-r px-4 py-2 text-left font-semibold">Opening Balance</th>
+                          <th className="border-r px-4 py-2 text-left font-semibold">Additions</th>
+                          <th className="border-r px-4 py-2 text-left font-semibold">Repayments</th>
+                          <th className="px-4 py-2 text-left font-semibold">Closing Balance</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b">
+                          <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">
+                            (Data to be populated)
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-foreground">Note 4 — Cash and Cash Equivalents</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Cash on hand and balances with banks: R —
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-foreground">Note 5 — Revenue</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Sales: R —
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -298,8 +343,10 @@ export default function ClientFinancials() {
   );
 }
 
-// NOTE (2026-03-03):
-// - Trial Balance, Cash Flow Statement, and Statement of Changes in Equity are UI stubs.
+// NOTE (2026-03-12):
+// - Trial Balance, Balance Sheet, Income Statement, and Notes to Financial Statements tabs present.
+// - Cash Flow Statement and Statement of Changes in Equity removed (Accountant-level only).
 // - Balance Sheet and Income Statement tabs use read-only mock data from financial-mock-data.ts.
+// - Notes tab contains 5 note stubs with mock data structure.
 // - "Go to Financial Statements" navigates to /client/financial-statements.
 // - Real data + export to PDF/Word/Excel to be wired in a future integration phase.
