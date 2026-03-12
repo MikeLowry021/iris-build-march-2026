@@ -22,19 +22,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  MessageSquare,
-  AlertCircle,
-  AlertTriangle,
-  HelpCircle,
-  Clock,
-  CheckCircle,
-  Plus,
-  Send,
-  User,
-  Calendar,
-  FileText,
-} from 'lucide-react';
+import { MessageSquare, CircleAlert as AlertCircle, TriangleAlert as AlertTriangle, CircleHelp as HelpCircle, Clock, CircleCheck as CheckCircle, Plus, Send, User, Calendar, FileText } from 'lucide-react';
 import { mockRFIs, mockPendingSubmissions, RFI, RFIType } from '@/lib/accountant-mock-data';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
