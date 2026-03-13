@@ -201,11 +201,18 @@ export default function AccountantDashboard() {
                             )}
                           </div>
                         </div>
-                        <Button size="sm" asChild>
-                          <Link to={`/accountant/clients/${submission.clientId}`}>
-                            Review
-                          </Link>
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          <Button size="sm" variant="outline" asChild>
+                            <Link to={`/accountant/clients/${submission.clientId}/financials`}>
+                              Financials
+                            </Link>
+                          </Button>
+                          <Button size="sm" asChild>
+                            <Link to={`/accountant/clients/${submission.clientId}`}>
+                              Review
+                            </Link>
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   );

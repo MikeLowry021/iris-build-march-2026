@@ -29,6 +29,7 @@ import ClientReports from "./pages/client/ClientReports";
 // Accountant pages
 import AccountantDashboard from "./pages/accountant/AccountantDashboard";
 import ClientReview from "./pages/accountant/ClientReview";
+import ClientFinancialsPreview from "./pages/accountant/ClientFinancialsPreview";
 import ReviewQueue from "./pages/accountant/ReviewQueue";
 import RFIManagement from "./pages/accountant/RFIManagement";
 import OverrideEntry from "./pages/accountant/OverrideEntry";
@@ -210,6 +211,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute allowedRoles={['accountant']}>
             <ClientReview />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/accountant/clients/:clientId/financials"
+        element={
+          <ProtectedRoute allowedRoles={['accountant']}>
+            <ClientFinancialsPreview />
           </ProtectedRoute>
         }
       />

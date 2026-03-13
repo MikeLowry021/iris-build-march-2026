@@ -217,12 +217,20 @@ export default function ReviewQueue() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button size="sm" asChild>
-                          <Link to={`/accountant/clients/${submission.clientId}`}>
-                            Review
-                            <ArrowRight className="ml-1 h-4 w-4" />
-                          </Link>
-                        </Button>
+                        <div className="flex items-center justify-end gap-2">
+                          <Button size="sm" variant="outline" asChild>
+                            <Link to={`/accountant/clients/${submission.clientId}/financials`}>
+                              <FileText className="mr-1 h-3.5 w-3.5" />
+                              Financials
+                            </Link>
+                          </Button>
+                          <Button size="sm" asChild>
+                            <Link to={`/accountant/clients/${submission.clientId}`}>
+                              Review
+                              <ArrowRight className="ml-1 h-4 w-4" />
+                            </Link>
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   );
