@@ -7,7 +7,9 @@ import { StatusBadge } from '@/components/StatusBadge';
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
@@ -28,26 +30,66 @@ import {
   ExternalLink,
 } from 'lucide-react';
 
-const categories = [
-  'All Categories',
-  'Revenue',
-  'Cost of Sales',
-  'Operating Expenses',
-  'VAT Payable',
-  'VAT Receivable',
-  'Bank Charges',
-  'Salaries',
-  'Salary / Payroll',
-  'Other',
+const CATEGORY_GROUPS = [
+  {
+    group: 'Income',
+    items: ['Cash Sale Income', 'EFT Received', 'Other Income'],
+  },
+  {
+    group: 'Transfer',
+    items: ['Transfer Between Own Accounts'],
+    note: 'Transfers are not income — use for movements between your own accounts',
+  },
+  {
+    group: 'Cost of Sales',
+    items: ['Purchases', 'Commissions Paid'],
+  },
+  {
+    group: 'Operating Expenses',
+    items: [
+      'Accounting Fees',
+      'Advertising & Promotions',
+      'Bank Charges',
+      'Cleaning',
+      'Computer Expenses',
+      'Consulting Fees',
+      'Electricity & Water',
+      'Insurance',
+      'Legal Fees',
+      'Lease Rentals',
+      'Motor Vehicle Expenses',
+      'Printing & Stationery',
+      'Repairs & Maintenance',
+      'Security',
+      'Staff Welfare',
+      'Subscriptions',
+      'Telephone & Fax',
+      'Travel & Accommodation',
+    ],
+  },
+  {
+    group: 'Salary / Payroll',
+    items: ["Salaries & Wages", "Director's Remuneration", 'Bonus', 'Commission'],
+  },
+  {
+    group: 'Tax & Compliance',
+    items: ['VAT Output', 'VAT Input', 'PAYE', 'Provisional Tax'],
+  },
 ];
 
-const SALARY_CATEGORIES = ['Salaries', 'Salary / Payroll', 'salary', 'payroll', 'Salary', 'Payroll'];
+const ALL_CATEGORIES = CATEGORY_GROUPS.flatMap(g => g.items);
+
+const SALARY_GROUP_ITEMS = new Set(
+  CATEGORY_GROUPS.find(g => g.group === 'Salary / Payroll')?.items ?? []
+);
 
 export default function Transactions() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
   const [selectedStatus, setSelectedStatus] = useState('all');
+  const [rowCategories, setRowCategories] = useState<Record<string, string>>({});
+  const [rowEmployeeNames, setRowEmployeeNames] = useState<Record<string, string>>({});
 
   const filteredTransactions = mockTransactions.filter(t => {
     const matchesSearch = t.description.toLowerCase().includes(searchQuery.toLowerCase());
@@ -56,11 +98,8 @@ export default function Transactions() {
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
-  // NOTE (2026-03-04): Salary/payroll transactions link to Payslips page.
-  // Banner and row links are additive — existing category and filter
-  // logic is unchanged.
   const salaryTransactions = filteredTransactions.filter(
-    t => t.category && SALARY_CATEGORIES.includes(t.category)
+    t => t.category && SALARY_GROUP_ITEMS.has(t.category)
   );
 
   return (
@@ -87,14 +126,20 @@ export default function Transactions() {
             />
           </div>
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-full sm:w-48">
+            <SelectTrigger className="w-full sm:w-52">
               <SelectValue placeholder="Category" />
             </SelectTrigger>
             <SelectContent>
-              {categories.map(cat => (
-                <SelectItem key={cat} value={cat}>
-                  {cat}
-                </SelectItem>
+              <SelectItem value="All Categories">All Categories</SelectItem>
+              {CATEGORY_GROUPS.map(group => (
+                <SelectGroup key={group.group}>
+                  <SelectLabel>{group.group}</SelectLabel>
+                  {group.items.map(item => (
+                    <SelectItem key={item} value={item}>
+                      {item}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
               ))}
             </SelectContent>
           </Select>
@@ -215,22 +260,62 @@ export default function Transactions() {
                     </td>
                     <td className="px-4 py-4">
                       {transaction.category ? (
-                        <span className="text-sm text-foreground">
-                          {transaction.category}
-                        </span>
+                        <div className="space-y-1">
+                          <span className="text-sm text-foreground">
+                            {transaction.category}
+                          </span>
+                          {SALARY_GROUP_ITEMS.has(transaction.category) && (
+                            <Input
+                              className="h-7 w-40 text-xs"
+                              placeholder="Enter employee name"
+                              value={rowEmployeeNames[transaction.id] || ''}
+                              onChange={e =>
+                                setRowEmployeeNames(prev => ({
+                                  ...prev,
+                                  [transaction.id]: e.target.value,
+                                }))
+                              }
+                            />
+                          )}
+                        </div>
                       ) : (
-                        <Select>
-                          <SelectTrigger className="h-8 w-40">
-                            <SelectValue placeholder="Categorize" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {categories.slice(1).map(cat => (
-                              <SelectItem key={cat} value={cat}>
-                                {cat}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <div className="space-y-1">
+                          <Select
+                            value={rowCategories[transaction.id] || ''}
+                            onValueChange={val =>
+                              setRowCategories(prev => ({ ...prev, [transaction.id]: val }))
+                            }
+                          >
+                            <SelectTrigger className="h-8 w-44">
+                              <SelectValue placeholder="Categorize" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {CATEGORY_GROUPS.map(group => (
+                                <SelectGroup key={group.group}>
+                                  <SelectLabel>{group.group}</SelectLabel>
+                                  {group.items.map(item => (
+                                    <SelectItem key={item} value={item}>
+                                      {item}
+                                    </SelectItem>
+                                  ))}
+                                </SelectGroup>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          {SALARY_GROUP_ITEMS.has(rowCategories[transaction.id] || '') && (
+                            <Input
+                              className="h-7 w-44 text-xs"
+                              placeholder="Enter employee name"
+                              value={rowEmployeeNames[transaction.id] || ''}
+                              onChange={e =>
+                                setRowEmployeeNames(prev => ({
+                                  ...prev,
+                                  [transaction.id]: e.target.value,
+                                }))
+                              }
+                            />
+                          )}
+                        </div>
                       )}
                     </td>
                     <td className="whitespace-nowrap px-4 py-4 text-right">
@@ -245,7 +330,7 @@ export default function Transactions() {
                     <td className="px-4 py-4 text-center">
                       <div className="flex flex-col items-center gap-1">
                         <StatusBadge status={transaction.status} />
-                        {transaction.category && SALARY_CATEGORIES.includes(transaction.category) && (
+                        {transaction.category && SALARY_GROUP_ITEMS.has(transaction.category) && (
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>

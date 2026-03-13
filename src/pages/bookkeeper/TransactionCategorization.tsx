@@ -8,10 +8,13 @@ import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -42,6 +45,57 @@ import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/mock-data';
 import { useToast } from '@/hooks/use-toast';
 
+const CATEGORY_GROUPS = [
+  {
+    group: 'Income',
+    items: ['Cash Sale Income', 'EFT Received', 'Other Income'],
+  },
+  {
+    group: 'Transfer',
+    items: ['Transfer Between Own Accounts'],
+    note: 'Transfers are not income — use for movements between your own accounts',
+  },
+  {
+    group: 'Cost of Sales',
+    items: ['Purchases', 'Commissions Paid'],
+  },
+  {
+    group: 'Operating Expenses',
+    items: [
+      'Accounting Fees',
+      'Advertising & Promotions',
+      'Bank Charges',
+      'Cleaning',
+      'Computer Expenses',
+      'Consulting Fees',
+      'Electricity & Water',
+      'Insurance',
+      'Legal Fees',
+      'Lease Rentals',
+      'Motor Vehicle Expenses',
+      'Printing & Stationery',
+      'Repairs & Maintenance',
+      'Security',
+      'Staff Welfare',
+      'Subscriptions',
+      'Telephone & Fax',
+      'Travel & Accommodation',
+    ],
+  },
+  {
+    group: 'Salary / Payroll',
+    items: ["Salaries & Wages", "Director's Remuneration", 'Bonus', 'Commission'],
+  },
+  {
+    group: 'Tax & Compliance',
+    items: ['VAT Output', 'VAT Input', 'PAYE', 'Provisional Tax'],
+  },
+];
+
+const SALARY_GROUP_ITEMS = new Set(
+  CATEGORY_GROUPS.find(g => g.group === 'Salary / Payroll')?.items ?? []
+);
+
 export default function TransactionCategorization() {
   const { clientId } = useParams<{ clientId: string }>();
   const { toast } = useToast();
@@ -54,6 +108,7 @@ export default function TransactionCategorization() {
   const [bulkCategory, setBulkCategory] = useState<string>('');
   const [bulkGLAccount, setBulkGLAccount] = useState<string>('');
   const [bulkVAT, setBulkVAT] = useState<VATTreatment | ''>('');
+  const [rowEmployeeNames, setRowEmployeeNames] = useState<Record<string, string>>({});
 
   const uncategorizedCount = useMemo(
     () => transactions.filter(t => t.status === 'uncategorized').length,
@@ -78,16 +133,16 @@ export default function TransactionCategorization() {
     setSelectedIds(newSet);
   };
 
-  const handleCategoryChange = (id: string, category: string) => {
-    const cat = mockCategories.find(c => c.id === category);
+  const handleCategoryChange = (id: string, categoryName: string) => {
+    const cat = mockCategories.find(c => c.name === categoryName);
     setTransactions(prev =>
       prev.map(t =>
         t.id === id
           ? {
               ...t,
-              category: cat?.name,
-              glAccount: cat?.glAccountCode,
-              vatTreatment: cat?.defaultVAT,
+              category: categoryName,
+              glAccount: cat?.glAccountCode ?? t.glAccount,
+              vatTreatment: cat?.defaultVAT ?? t.vatTreatment,
               status: 'categorized' as const,
             }
           : t
@@ -113,13 +168,13 @@ export default function TransactionCategorization() {
       return;
     }
 
-    const cat = mockCategories.find(c => c.id === bulkCategory);
+    const cat = mockCategories.find(c => c.name === bulkCategory);
     setTransactions(prev =>
       prev.map(t =>
         selectedIds.has(t.id)
           ? {
               ...t,
-              category: bulkCategory ? cat?.name : t.category,
+              category: bulkCategory || t.category,
               glAccount: bulkGLAccount || cat?.glAccountCode || t.glAccount,
               vatTreatment: (bulkVAT || cat?.defaultVAT || t.vatTreatment) as VATTreatment,
               status: 'categorized' as const,
@@ -211,14 +266,19 @@ export default function TransactionCategorization() {
                 </span>
                 <Separator orientation="vertical" className="h-6" />
                 <Select value={bulkCategory} onValueChange={setBulkCategory}>
-                  <SelectTrigger className="w-[160px]">
+                  <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
-                    {mockCategories.map((cat) => (
-                      <SelectItem key={cat.id} value={cat.id}>
-                        {cat.name}
-                      </SelectItem>
+                    {CATEGORY_GROUPS.map(group => (
+                      <SelectGroup key={group.group}>
+                        <SelectLabel>{group.group}</SelectLabel>
+                        {group.items.map(item => (
+                          <SelectItem key={item} value={item}>
+                            {item}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
                     ))}
                   </SelectContent>
                 </Select>
@@ -303,21 +363,41 @@ export default function TransactionCategorization() {
                         {formatCurrency(tx.amount)}
                       </TableCell>
                       <TableCell>
-                        <Select
-                          value={mockCategories.find(c => c.name === tx.category)?.id || ''}
-                          onValueChange={(v) => handleCategoryChange(tx.id, v)}
-                        >
-                          <SelectTrigger className="h-8">
-                            <SelectValue placeholder="Select..." />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {mockCategories.map((cat) => (
-                              <SelectItem key={cat.id} value={cat.id}>
-                                {cat.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <div className="space-y-1">
+                          <Select
+                            value={tx.category || ''}
+                            onValueChange={(v) => handleCategoryChange(tx.id, v)}
+                          >
+                            <SelectTrigger className="h-8 min-w-[160px]">
+                              <SelectValue placeholder="Select..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {CATEGORY_GROUPS.map(group => (
+                                <SelectGroup key={group.group}>
+                                  <SelectLabel>{group.group}</SelectLabel>
+                                  {group.items.map(item => (
+                                    <SelectItem key={item} value={item}>
+                                      {item}
+                                    </SelectItem>
+                                  ))}
+                                </SelectGroup>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          {SALARY_GROUP_ITEMS.has(tx.category || '') && (
+                            <Input
+                              className="h-7 min-w-[160px] text-xs"
+                              placeholder="Enter employee name"
+                              value={rowEmployeeNames[tx.id] || ''}
+                              onChange={e =>
+                                setRowEmployeeNames(prev => ({
+                                  ...prev,
+                                  [tx.id]: e.target.value,
+                                }))
+                              }
+                            />
+                          )}
+                        </div>
                       </TableCell>
                       <TableCell>
                         <Select

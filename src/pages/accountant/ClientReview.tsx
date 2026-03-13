@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { ReviewOverview } from '@/components/review/ReviewOverview';
-import { FinancialsReview } from '@/components/review/FinancialsReview';
 import { IT14SDReconciliation } from '@/components/review/IT14SDReconciliation';
 import { SignOffPanel } from '@/components/review/SignOffPanel';
 import { ClientReview as ClientReviewType, ReviewComment } from '@/lib/review-types';
@@ -13,14 +12,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { 
-  ArrowLeft, 
-  Building2, 
-  FileText, 
+import {
+  ArrowLeft,
+  Building2,
+  FileText,
   Calculator,
   PenTool,
   LayoutDashboard,
 } from 'lucide-react';
+
 
 export default function ClientReview() {
   const { clientId } = useParams<{ clientId: string }>();
@@ -226,14 +226,10 @@ export default function ClientReview() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="overview" className="gap-2">
               <LayoutDashboard className="h-4 w-4 hidden sm:inline" />
               Overview
-            </TabsTrigger>
-            <TabsTrigger value="financials" className="gap-2">
-              <FileText className="h-4 w-4 hidden sm:inline" />
-              Financials
             </TabsTrigger>
             <TabsTrigger value="it14sd" className="gap-2">
               <Calculator className="h-4 w-4 hidden sm:inline" />
@@ -247,15 +243,6 @@ export default function ClientReview() {
 
           <TabsContent value="overview" className="mt-6">
             <ReviewOverview review={review} />
-          </TabsContent>
-
-          <TabsContent value="financials" className="mt-6">
-            <FinancialsReview
-              review={review}
-              onChecklistToggle={handleChecklistToggle}
-              onAddComment={handleAddComment}
-              onResolveComment={handleResolveComment}
-            />
           </TabsContent>
 
           <TabsContent value="it14sd" className="mt-6">
