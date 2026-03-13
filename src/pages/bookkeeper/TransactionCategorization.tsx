@@ -25,13 +25,7 @@ import {
 } from '@/components/ui/table';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import {
-  CheckCircle,
-  Save,
-  Users,
-  Receipt,
-  Info,
-} from 'lucide-react';
+import { CircleCheck as CheckCircle, Save, Users, Receipt, Info } from 'lucide-react';
 import {
   mockBookkeeperClients,
   mockBookkeeperTransactions,
