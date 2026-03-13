@@ -20,17 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  Search,
-  Clock,
-  AlertCircle,
-  CheckCircle,
-  ArrowRight,
-  AlertTriangle,
-  Calendar,
-  FileText,
-  MessageSquare,
-} from 'lucide-react';
+import { Search, Clock, CircleAlert as AlertCircle, CircleCheck as CheckCircle, ArrowRight, TriangleAlert as AlertTriangle, Calendar, FileText, MessageSquare } from 'lucide-react';
 import {
   mockPendingSubmissions,
   getStatusConfig,

@@ -6,19 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
-import {
-  Search,
-  Users,
-  Clock,
-  CheckCircle,
-  AlertCircle,
-  ArrowRight,
-  MessageSquare,
-  PenTool,
-  FileText,
-  AlertTriangle,
-  Calendar,
-} from 'lucide-react';
+import { Search, Users, Clock, CircleCheck as CheckCircle, CircleAlert as AlertCircle, ArrowRight, MessageSquare, PenTool, FileText, TriangleAlert as AlertTriangle, Calendar } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   mockPendingSubmissions,
