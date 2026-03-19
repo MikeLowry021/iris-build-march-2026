@@ -109,7 +109,7 @@ export function getPortalLabelForRole(role: UserRole | undefined): string {
     case 'bookkeeper':
       return 'Bookkeeper Portal';
     case 'ceo':
-      return 'CEO Portal';
+      return 'Director Portal';
     case 'independent-reviewer':
       return 'Independent Reviewer Portal';
     case 'auditor':

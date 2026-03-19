@@ -35,17 +35,7 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/ui/tabs';
-import {
-  Plus,
-  Search,
-  Eye,
-  Edit,
-  FileText,
-  Calendar,
-  UserMinus,
-  Check,
-  X,
-} from 'lucide-react';
+import { Plus, Search, Eye, CreditCard as Edit, FileText, Calendar, UserMinus, Check, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { mockCEOEmployees, mockCEOLeaveRequests } from '@/lib/ceo-mock-data';
 import {
@@ -210,7 +200,7 @@ const CEOEmployees = () => {
                         <SelectValue placeholder="Select supervisor" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="ceo">Jane Smith (CEO)</SelectItem>
+                        <SelectItem value="ceo">Jane Smith (Director)</SelectItem>
                         <SelectItem value="manager">David Anderson (Manager)</SelectItem>
                         <SelectItem value="senior">Sarah Johnson (Senior)</SelectItem>
                       </SelectContent>
@@ -521,7 +511,7 @@ const CEOEmployees = () => {
                       <p><span className="text-muted-foreground">Department:</span> {selectedEmployee.department}</p>
                       <p><span className="text-muted-foreground">Type:</span> {getEmploymentTypeLabel(selectedEmployee.employmentType)}</p>
                       <p><span className="text-muted-foreground">Start Date:</span> {new Date(selectedEmployee.startDate).toLocaleDateString()}</p>
-                      <p><span className="text-muted-foreground">Reports To:</span> {selectedEmployee.reportsTo || 'CEO'}</p>
+                      <p><span className="text-muted-foreground">Reports To:</span> {selectedEmployee.reportsTo || 'Director'}</p>
                       <p><span className="text-muted-foreground">Salary:</span> {formatCurrency(selectedEmployee.salary)}</p>
                     </div>
                   </div>

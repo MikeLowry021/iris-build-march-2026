@@ -20,7 +20,7 @@ const demoProfiles: { role: UserRole; label: string; icon: React.ElementType; em
   { role: 'accountant', label: 'Accountant', icon: Building2, email: 'accountant@iris.demo' },
   { role: 'independent-reviewer', label: 'Ind. Reviewer', icon: ShieldCheck, email: 'n.mthembu@iris.co.za' },
   { role: 'auditor', label: 'Auditor', icon: Stamp, email: 'p.vandermerwe@iris.co.za' },
-  { role: 'ceo', label: 'CEO', icon: Briefcase, email: 'ceo@iris.demo' },
+  { role: 'ceo', label: 'Director', icon: Briefcase, email: 'ceo@iris.demo' },
   { role: 'admin', label: 'Admin', icon: Shield, email: 'admin@iris.demo' },
 ];
 
