@@ -6,21 +6,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
-import {
-  Building2,
-  User,
-  Bell,
-  Lock,
-  Mail,
-  Phone,
-  MapPin,
-  Shield,
-  LogOut,
-} from 'lucide-react';
+import { Building2, User, Bell, Lock, Mail, Phone, MapPin, Shield, LogOut, Loader as Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { mockCEOBusiness } from '@/lib/ceo-mock-data';
+import { useToast } from '@/hooks/use-toast';
 
 const CEOSettings = () => {
+  const { toast: showToast } = useToast();
   const business = mockCEOBusiness;
   const [notifications, setNotifications] = useState({
     lowCash: true,
@@ -30,9 +22,17 @@ const CEOSettings = () => {
     expenseApprovals: true,
     leaveRequests: true,
   });
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleSaveProfile = () => {
-    toast.success('Profile settings saved');
+    setIsSaving(true);
+    setTimeout(() => {
+      setIsSaving(false);
+      showToast({
+        title: "Profile updated successfully",
+        description: "Your changes have been saved.",
+      });
+    }, 800);
   };
 
   const handleSaveNotifications = () => {
@@ -97,7 +97,16 @@ const CEOSettings = () => {
                   </div>
                 </div>
               )}
-              <Button onClick={handleSaveProfile}>Save Changes</Button>
+              <Button onClick={handleSaveProfile} disabled={isSaving}>
+                {isSaving ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  'Save Changes'
+                )}
+              </Button>
             </CardContent>
           </Card>
 
@@ -136,7 +145,16 @@ const CEOSettings = () => {
                 </Label>
                 <Input defaultValue={business.address} />
               </div>
-              <Button onClick={handleSaveProfile}>Save Changes</Button>
+              <Button onClick={handleSaveProfile} disabled={isSaving}>
+                {isSaving ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  'Save Changes'
+                )}
+              </Button>
             </CardContent>
           </Card>
         </div>

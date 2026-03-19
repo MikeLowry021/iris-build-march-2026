@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -40,7 +41,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
-import { DollarSign, FileText, Send, Check, Download, ChevronDown, CreditCard as Edit, Eye } from 'lucide-react';
+import { DollarSign, FileText, Send, Check, Download, ChevronDown, CreditCard as Edit, Eye, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import { mockCEOPayroll, mockCEOPayrollHistory } from '@/lib/ceo-mock-data';
 import {
@@ -56,6 +57,7 @@ const months = [
 ];
 
 const CEOPayroll = () => {
+  const navigate = useNavigate();
   const [payroll, setPayroll] = useState(mockCEOPayroll);
   const [selectedMonth, setSelectedMonth] = useState(payroll.month);
   const [selectedYear, setSelectedYear] = useState(payroll.year);
@@ -129,6 +131,12 @@ const CEOPayroll = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
+        {/* Back Button */}
+        <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
+          <ArrowLeft className="h-4 w-4 mr-1" />
+          Back
+        </Button>
+
         {/* Page Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>

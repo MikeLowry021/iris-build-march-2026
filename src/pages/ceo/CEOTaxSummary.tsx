@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Download, Lightbulb, MessageSquare, Calculator, ChartPie as PieChart, ArrowRight, CircleCheck as CheckCircle2, Circle as XCircle } from 'lucide-react';
+import { Download, Lightbulb, MessageSquare, Calculator, ChartPie as PieChart, ArrowRight, CircleCheck as CheckCircle2, Circle as XCircle, ArrowLeft } from 'lucide-react';
 import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
@@ -37,6 +37,12 @@ const CEOTaxSummary = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
+        {/* Back Button */}
+        <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
+          <ArrowLeft className="h-4 w-4 mr-1" />
+          Back
+        </Button>
+
         {/* Page Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>

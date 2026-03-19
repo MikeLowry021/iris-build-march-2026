@@ -17,15 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
 import { getNavItemsForRole, getPortalLabelForRole } from '@/lib/navigation-config';
-import {
-  LogOut,
-  Menu,
-  X,
-  ChevronRight,
-  Settings,
-  UserCircle,
-  RefreshCw,
-} from 'lucide-react';
+import { LogOut, Menu, X, ChevronRight, Settings, CircleUser as UserCircle, RefreshCw } from 'lucide-react';
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
@@ -163,9 +155,11 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           </div>
 
           {/* Center: Global Search */}
-          <div className="hidden flex-1 justify-center lg:flex">
-            <GlobalSearch />
-          </div>
+          {user?.role !== 'ceo' && user?.role !== 'director' && (
+            <div className="hidden flex-1 justify-center lg:flex">
+              <GlobalSearch />
+            </div>
+          )}
 
           {/* Right: Theme toggle + User menu */}
           <div className="flex items-center gap-2">
