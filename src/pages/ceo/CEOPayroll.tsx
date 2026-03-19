@@ -23,6 +23,12 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -34,16 +40,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
-import {
-  DollarSign,
-  FileText,
-  Send,
-  Check,
-  Download,
-  ChevronDown,
-  Edit,
-  Eye,
-} from 'lucide-react';
+import { DollarSign, FileText, Send, Check, Download, ChevronDown, CreditCard as Edit, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import { mockCEOPayroll, mockCEOPayrollHistory } from '@/lib/ceo-mock-data';
 import {
@@ -63,6 +60,7 @@ const CEOPayroll = () => {
   const [selectedMonth, setSelectedMonth] = useState(payroll.month);
   const [selectedYear, setSelectedYear] = useState(payroll.year);
   const [editingEmployee, setEditingEmployee] = useState<CEOPayrollEmployee | null>(null);
+  const [viewingEmployee, setViewingEmployee] = useState<CEOPayrollEmployee | null>(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   const getStatusColor = (status: string) => {
@@ -279,7 +277,7 @@ const CEOPayroll = () => {
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon">
+                          <Button variant="ghost" size="icon" onClick={() => setViewingEmployee(employee)}>
                             <Eye className="h-4 w-4" />
                           </Button>
                         </div>
@@ -497,6 +495,232 @@ const CEOPayroll = () => {
               </Button>
               <Button onClick={handleSaveEmployee}>Save Changes</Button>
             </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Payslip Detail Dialog */}
+        <Dialog open={!!viewingEmployee} onOpenChange={() => setViewingEmployee(null)}>
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Payslip</DialogTitle>
+              <DialogDescription>
+                {viewingEmployee?.employeeName} — {months[payroll.month - 1]} {payroll.year}
+              </DialogDescription>
+            </DialogHeader>
+            {viewingEmployee && (
+              <div className="space-y-6 text-sm">
+
+                {/* SECTION A — COMPANY HEADER */}
+                <div className="flex items-start gap-4 rounded-lg border bg-muted/30 p-4">
+                  <div className="flex h-16 w-24 shrink-0 items-center justify-center rounded border bg-muted text-xs font-medium text-muted-foreground">
+                    COMPANY LOGO
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="text-base font-semibold">Iris Demo Accounting (Pty) Ltd</p>
+                    <p className="text-muted-foreground">12 Church Street, Cape Town, 8001</p>
+                    <p className="text-muted-foreground">Tax Number: 9876543210</p>
+                    <p className="text-muted-foreground">Registration: 2019/123456/07</p>
+                  </div>
+                </div>
+
+                {/* SECTION B — EMPLOYEE DETAILS */}
+                <div>
+                  <p className="mb-2 font-semibold text-foreground">Employee Details</p>
+                  <div className="grid grid-cols-2 gap-x-8 gap-y-1 rounded-lg border p-4">
+                    <div className="space-y-1">
+                      <div className="flex gap-1">
+                        <span className="w-36 shrink-0 text-muted-foreground">Employee Name</span>
+                        <span className="font-medium">{viewingEmployee.employeeName}</span>
+                      </div>
+                      <div className="flex gap-1">
+                        <span className="w-36 shrink-0 text-muted-foreground">Address</span>
+                        <span>45 Rose Street, Bellville, 7530</span>
+                      </div>
+                      <div className="flex gap-1">
+                        <span className="w-36 shrink-0 text-muted-foreground">ID Number</span>
+                        <span>8801015800080</span>
+                      </div>
+                      <div className="flex gap-1">
+                        <span className="w-36 shrink-0 text-muted-foreground">Tax Number</span>
+                        <span>1234567890</span>
+                      </div>
+                      <div className="flex gap-1">
+                        <span className="w-36 shrink-0 text-muted-foreground">Start Date</span>
+                        <span>01 March 2021</span>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex gap-1">
+                        <span className="w-36 shrink-0 text-muted-foreground">Employee No.</span>
+                        <span>{viewingEmployee.employeeId}</span>
+                      </div>
+                      <div className="flex gap-1">
+                        <span className="w-36 shrink-0 text-muted-foreground">Department</span>
+                        <span>{viewingEmployee.position}</span>
+                      </div>
+                      <div className="flex gap-1">
+                        <span className="w-36 shrink-0 text-muted-foreground">Pay Period</span>
+                        <span>{months[payroll.month - 1]} {payroll.year}</span>
+                      </div>
+                      <div className="flex gap-1">
+                        <span className="w-36 shrink-0 text-muted-foreground">Pay Date</span>
+                        <span>28 {months[payroll.month - 1]} {payroll.year}</span>
+                      </div>
+                      <div className="flex gap-1">
+                        <span className="w-36 shrink-0 text-muted-foreground">Bank</span>
+                        <span>First National Bank</span>
+                      </div>
+                      <div className="flex gap-1">
+                        <span className="w-36 shrink-0 text-muted-foreground">Account</span>
+                        <span>62XXXXXXX910</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* SECTION C — EARNINGS TABLE */}
+                <div>
+                  <p className="mb-2 font-semibold text-foreground">Earnings</p>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Description</TableHead>
+                        <TableHead className="text-right">Current Month</TableHead>
+                        <TableHead className="text-right">YTD</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>Basic Salary</TableCell>
+                        <TableCell className="text-right">{formatCurrency(viewingEmployee.baseSalary)}</TableCell>
+                        <TableCell className="text-right">{formatCurrency(viewingEmployee.baseSalary * 9)}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Director's Remuneration</TableCell>
+                        <TableCell className="text-right">{formatCurrency(0)}</TableCell>
+                        <TableCell className="text-right">{formatCurrency(0)}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Bonus</TableCell>
+                        <TableCell className="text-right">{formatCurrency(viewingEmployee.bonus)}</TableCell>
+                        <TableCell className="text-right">{formatCurrency(viewingEmployee.bonus)}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Commission</TableCell>
+                        <TableCell className="text-right">{formatCurrency(0)}</TableCell>
+                        <TableCell className="text-right">{formatCurrency(0)}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Overtime</TableCell>
+                        <TableCell className="text-right">{formatCurrency(0)}</TableCell>
+                        <TableCell className="text-right">{formatCurrency(0)}</TableCell>
+                      </TableRow>
+                      <TableRow className="border-t-2 font-semibold">
+                        <TableCell>Gross Earnings</TableCell>
+                        <TableCell className="text-right">{formatCurrency(viewingEmployee.gross)}</TableCell>
+                        <TableCell className="text-right">{formatCurrency(viewingEmployee.gross * 9 + viewingEmployee.bonus)}</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </div>
+
+                {/* SECTION D — DEDUCTIONS TABLE */}
+                <div>
+                  <p className="mb-2 font-semibold text-foreground">Deductions</p>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Description</TableHead>
+                        <TableHead className="text-right">Current Month</TableHead>
+                        <TableHead className="text-right">YTD</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>PAYE Income Tax</TableCell>
+                        <TableCell className="text-right text-destructive">-{formatCurrency(viewingEmployee.paye)}</TableCell>
+                        <TableCell className="text-right text-destructive">-{formatCurrency(viewingEmployee.paye * 9)}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>UIF (Employee 1%)</TableCell>
+                        <TableCell className="text-right text-destructive">-{formatCurrency(viewingEmployee.uif)}</TableCell>
+                        <TableCell className="text-right text-destructive">-{formatCurrency(viewingEmployee.uif * 9)}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>SDL (Employer 1%)</TableCell>
+                        <TableCell className="text-right text-destructive">-{formatCurrency(viewingEmployee.sdl)}</TableCell>
+                        <TableCell className="text-right text-destructive">-{formatCurrency(viewingEmployee.sdl * 9)}</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Medical Aid</TableCell>
+                        <TableCell className="text-right text-destructive">-{formatCurrency(viewingEmployee.deductionAmount)}</TableCell>
+                        <TableCell className="text-right text-destructive">-{formatCurrency(viewingEmployee.deductionAmount * 9)}</TableCell>
+                      </TableRow>
+                      <TableRow className="border-t-2 font-semibold">
+                        <TableCell>Total Deductions</TableCell>
+                        <TableCell className="text-right text-destructive">
+                          -{formatCurrency(viewingEmployee.paye + viewingEmployee.uif + viewingEmployee.sdl + viewingEmployee.deductionAmount)}
+                        </TableCell>
+                        <TableCell className="text-right text-destructive">
+                          -{formatCurrency((viewingEmployee.paye + viewingEmployee.uif + viewingEmployee.sdl + viewingEmployee.deductionAmount) * 9)}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </div>
+
+                {/* SECTION E — NET PAY SUMMARY */}
+                <div className="rounded-lg border bg-primary/5 p-4">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Gross Earnings</span>
+                    <span>{formatCurrency(viewingEmployee.gross)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm mt-1">
+                    <span className="text-muted-foreground">Total Deductions</span>
+                    <span className="text-destructive">
+                      -{formatCurrency(viewingEmployee.paye + viewingEmployee.uif + viewingEmployee.sdl + viewingEmployee.deductionAmount)}
+                    </span>
+                  </div>
+                  <div className="mt-3 flex justify-between border-t pt-3">
+                    <span className="text-xl font-bold">NET PAY</span>
+                    <span className="text-xl font-bold text-primary">{formatCurrency(viewingEmployee.net)}</span>
+                  </div>
+                </div>
+
+                {/* SECTION F — CUMULATIVE YTD SUMMARY */}
+                <div className="rounded-lg border bg-muted/30 p-3 text-xs text-muted-foreground">
+                  <p className="mb-1 font-medium text-foreground">Year to Date Summary</p>
+                  <div className="flex gap-8">
+                    <span>YTD Gross: <span className="font-medium text-foreground">{formatCurrency(viewingEmployee.gross * 9 + viewingEmployee.bonus)}</span></span>
+                    <span>YTD Tax Paid: <span className="font-medium text-foreground">{formatCurrency(viewingEmployee.paye * 9)}</span></span>
+                    <span>YTD Net: <span className="font-medium text-foreground">{formatCurrency(viewingEmployee.net * 9)}</span></span>
+                  </div>
+                </div>
+
+                {/* SECTION G — FOOTER */}
+                <div className="space-y-3">
+                  <p className="text-center text-xs text-muted-foreground">
+                    This payslip is computer generated and valid without a signature. | Generated by Iris
+                  </p>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="w-full">
+                          <Button className="w-full cursor-not-allowed opacity-50" disabled={true}>
+                            <Download className="mr-2 h-4 w-4" />
+                            Download PDF
+                          </Button>
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>PDF export enabled in production build</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+
+              </div>
+            )}
           </DialogContent>
         </Dialog>
       </div>

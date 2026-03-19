@@ -67,6 +67,15 @@ export interface Payslip {
   }[];
   status: 'generated' | 'pending' | 'error';
   downloadUrl?: string;
+  employeeAddress?: string;
+  idNumber?: string;
+  taxNumber?: string;
+  employmentStartDate?: string;
+  employeeNumber?: string;
+  department?: string;
+  payDate?: string;
+  bank?: string;
+  accountNumber?: string;
 }
 
 // Jane's Salon Client Info
@@ -255,6 +264,15 @@ export const mockPayslips: Payslip[] = [
       { type: 'Medical Aid', amount: 340 },
     ],
     status: 'generated',
+    employeeAddress: '45 Rose Street, Bellville, 7530',
+    idNumber: '8801015800080',
+    taxNumber: '1234567890',
+    employmentStartDate: '01 March 2021',
+    employeeNumber: 'EMP-001',
+    department: 'Accounting',
+    payDate: '28 February 2026',
+    bank: 'First National Bank',
+    accountNumber: '62XXXXXXX910',
   },
   {
     id: 'ps_002',
@@ -270,6 +288,15 @@ export const mockPayslips: Payslip[] = [
       { type: 'Pension Fund', amount: 225 },
     ],
     status: 'generated',
+    employeeAddress: '12 Oak Avenue, Parow, 7500',
+    idNumber: '9002145800083',
+    taxNumber: '2345678901',
+    employmentStartDate: '15 June 2022',
+    employeeNumber: 'EMP-002',
+    department: 'Operations',
+    payDate: '28 February 2026',
+    bank: 'Standard Bank',
+    accountNumber: '00XXXXXXX421',
   },
   {
     id: 'ps_003',
@@ -285,6 +312,15 @@ export const mockPayslips: Payslip[] = [
       { type: 'Medical Aid', amount: 340 },
     ],
     status: 'generated',
+    employeeAddress: '45 Rose Street, Bellville, 7530',
+    idNumber: '8801015800080',
+    taxNumber: '1234567890',
+    employmentStartDate: '01 March 2021',
+    employeeNumber: 'EMP-001',
+    department: 'Accounting',
+    payDate: '28 January 2026',
+    bank: 'First National Bank',
+    accountNumber: '62XXXXXXX910',
   },
   {
     id: 'ps_004',
@@ -300,6 +336,15 @@ export const mockPayslips: Payslip[] = [
       { type: 'Pension Fund', amount: 225 },
     ],
     status: 'generated',
+    employeeAddress: '12 Oak Avenue, Parow, 7500',
+    idNumber: '9002145800083',
+    taxNumber: '2345678901',
+    employmentStartDate: '15 June 2022',
+    employeeNumber: 'EMP-002',
+    department: 'Operations',
+    payDate: '28 January 2026',
+    bank: 'Standard Bank',
+    accountNumber: '00XXXXXXX421',
   },
 ];
 
