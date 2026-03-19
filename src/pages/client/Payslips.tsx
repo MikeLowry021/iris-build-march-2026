@@ -466,7 +466,7 @@ export default function Payslips() {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <span className="w-full">
-                        <Button className="w-full cursor-not-allowed opacity-50" disabled={true}>
+                        <Button variant="outline" className="w-full cursor-not-allowed opacity-50" disabled={true}>
                           <Download className="mr-2 h-4 w-4" />
                           Download PDF
                         </Button>
