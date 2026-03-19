@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { ChevronRight, Home } from 'lucide-react';
+import { ChevronRight, Chrome as Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface BreadcrumbItem {
@@ -32,6 +32,9 @@ const routeLabels: Record<string, string> = {
   'audit-trail': 'Audit Trail',
   'settings': 'Settings',
   
+  // CEO / Director routes
+  'ceo': 'Director',
+
   // Admin routes
   'admin': 'Admin',
   'manage-clients': 'Manage Clients',
