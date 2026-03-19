@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Download, Lightbulb, MessageSquare, Calculator, ChartPie as PieChart, ArrowRight } from 'lucide-react';
+import { Download, Lightbulb, MessageSquare, Calculator, ChartPie as PieChart, ArrowRight, CircleCheck as CheckCircle2, Circle as XCircle } from 'lucide-react';
 import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
