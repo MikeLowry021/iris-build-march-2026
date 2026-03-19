@@ -2,7 +2,6 @@ import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import {
   Accordion,
   AccordionContent,
@@ -17,8 +16,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Download, Lightbulb, MessageSquare, CircleCheck as CheckCircle2, TriangleAlert as AlertTriangle, Circle as XCircle, Calculator, ChartPie as PieChart, ArrowRight } from 'lucide-react';
-import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { Download, Lightbulb, MessageSquare, Calculator, ChartPie as PieChart, ArrowRight } from 'lucide-react';
+import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { mockCEOTaxSummary } from '@/lib/ceo-mock-data';
@@ -29,32 +28,6 @@ const COLORS = ['hsl(180, 63%, 34%)', 'hsl(34, 14%, 31%)', 'hsl(152, 69%, 40%)',
 const CEOTaxSummary = () => {
   const navigate = useNavigate();
   const taxSummary = mockCEOTaxSummary;
-
-  const getComplianceIcon = (status: string) => {
-    switch (status) {
-      case 'passed':
-        return <CheckCircle2 className="h-4 w-4 text-success" />;
-      case 'warning':
-        return <AlertTriangle className="h-4 w-4 text-warning" />;
-      case 'failed':
-        return <XCircle className="h-4 w-4 text-destructive" />;
-      default:
-        return null;
-    }
-  };
-
-  const getComplianceBadge = (status: string) => {
-    switch (status) {
-      case 'passed':
-        return <Badge variant="default" className="bg-success">Passed</Badge>;
-      case 'warning':
-        return <Badge variant="secondary" className="bg-warning text-warning-foreground">Warning</Badge>;
-      case 'failed':
-        return <Badge variant="destructive">Failed</Badge>;
-      default:
-        return null;
-    }
-  };
 
   const pieData = taxSummary.expenseBreakdown.map((item) => ({
     name: item.category,
@@ -242,11 +215,25 @@ const CEOTaxSummary = () => {
                 <h3 className="text-sm font-semibold text-muted-foreground">Income Tax — Annual</h3>
               </div>
               <div className="space-y-2">
-                {/* Provisional Tax */}
+                {/* Provisional Tax Period 1 */}
                 <div className="rounded-lg border border-input p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
-                      <p className="font-medium">Provisional Tax (Period 2)</p>
+                      <p className="font-medium">Provisional Tax — Period 1 (August)</p>
+                      <p className="text-sm text-muted-foreground">Due 31 Aug 2025</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">{formatCurrency(32200)}</p>
+                      <Badge variant="default" className="bg-success">Paid</Badge>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Provisional Tax Period 2 */}
+                <div className="rounded-lg border border-input p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="font-medium">Provisional Tax — Period 2 (February)</p>
                       <p className="text-sm text-muted-foreground">Due 28 Feb 2026</p>
                     </div>
                     <div className="text-right">
@@ -256,16 +243,32 @@ const CEOTaxSummary = () => {
                   </div>
                 </div>
 
-                {/* Final Tax */}
-                <div className="rounded-lg border border-input bg-destructive/5 p-4">
+                {/* Provisional Tax Period 3 */}
+                <div className="rounded-lg border border-input p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
-                      <p className="font-medium">Final Tax (IT14 / Assessment)</p>
-                      <p className="text-sm text-muted-foreground">Due 31 Mar 2026</p>
+                      <p className="font-medium">Provisional Tax — Period 3 / Top-up (Optional)</p>
+                      <p className="text-sm text-muted-foreground">Due 30 Sep 2026</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-destructive">{formatCurrency(8114)}</p>
-                      <Badge variant="destructive">Action Required</Badge>
+                      <p className="font-semibold text-muted-foreground">—</p>
+                      <Badge variant="secondary" className="bg-warning text-warning-foreground">Not Required</Badge>
+                    </div>
+                  </div>
+                </div>
+
+                {/* IT14 Annual Return */}
+                <div className="rounded-lg border border-input bg-muted/30 p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="font-medium">IT14 Annual Return</p>
+                      <p className="text-sm text-muted-foreground">Year ended Feb 2026</p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        IT14 reconciles PAYE, VAT and provisional tax submissions for the full year.
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <Badge variant="secondary">Pending</Badge>
                     </div>
                   </div>
                 </div>
@@ -274,78 +277,44 @@ const CEOTaxSummary = () => {
           </CardContent>
         </Card>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          {/* Expense Breakdown */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <PieChart className="h-5 w-5" />
-                Deductible Expenses Breakdown
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RechartsPie>
-                    <Pie
-                      data={pieData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={100}
-                      paddingAngle={2}
-                      dataKey="value"
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                      labelLine={false}
-                    >
-                      {pieData.map((_, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      formatter={(value: number) => formatCurrency(value)}
-                    />
-                  </RechartsPie>
-                </ResponsiveContainer>
-              </div>
-              <Button variant="link" className="mt-4">
-                View all categorized deductions
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Compliance Checklist */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Tax Compliance Checklist</CardTitle>
-              <CardDescription>Status of your tax obligations</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {taxSummary.complianceChecklist.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex items-start justify-between rounded-lg border p-3"
+        {/* Expense Breakdown */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <PieChart className="h-5 w-5" />
+              Deductible Expenses Breakdown
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <RechartsPie>
+                  <Pie
+                    data={pieData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={2}
+                    dataKey="value"
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    labelLine={false}
                   >
-                    <div className="flex items-start gap-3">
-                      {getComplianceIcon(item.status)}
-                      <div>
-                        <p className="font-medium">{item.item}</p>
-                        {item.details && (
-                          <p className="text-sm text-muted-foreground">{item.details}</p>
-                        )}
-                      </div>
-                    </div>
-                    {getComplianceBadge(item.status)}
-                  </div>
-                ))}
-              </div>
-              <Button variant="link" className="mt-4">
-                View detailed compliance status
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+                    {pieData.map((_, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(value: number) => formatCurrency(value)}
+                  />
+                </RechartsPie>
+              </ResponsiveContainer>
+            </div>
+            <Button variant="link" className="mt-4">
+              View all categorized deductions
+            </Button>
+          </CardContent>
+        </Card>
 
         {/* Tax Saving Suggestions */}
         <Card>
