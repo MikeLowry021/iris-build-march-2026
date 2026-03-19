@@ -17,24 +17,17 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  Download,
-  Lightbulb,
-  MessageSquare,
-  CheckCircle2,
-  AlertTriangle,
-  XCircle,
-  Calculator,
-  PieChart,
-} from 'lucide-react';
+import { Download, Lightbulb, MessageSquare, CircleCheck as CheckCircle2, TriangleAlert as AlertTriangle, Circle as XCircle, Calculator, ChartPie as PieChart, ArrowRight } from 'lucide-react';
 import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 import { mockCEOTaxSummary } from '@/lib/ceo-mock-data';
 import { formatCurrency, formatPercentage } from '@/lib/ceo-types';
 
 const COLORS = ['hsl(180, 63%, 34%)', 'hsl(34, 14%, 31%)', 'hsl(152, 69%, 40%)', 'hsl(38, 92%, 50%)', 'hsl(0, 72%, 51%)', 'hsl(180, 63%, 50%)', 'hsl(34, 14%, 45%)', 'hsl(152, 69%, 50%)', 'hsl(38, 92%, 60%)'];
 
 const CEOTaxSummary = () => {
+  const navigate = useNavigate();
   const taxSummary = mockCEOTaxSummary;
 
   const getComplianceIcon = (status: string) => {
@@ -139,6 +132,144 @@ const CEOTaxSummary = () => {
                 <Download className="mr-2 h-4 w-4" />
                 Download Tax Summary
               </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Tax Obligations by Frequency */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Tax Obligations</CardTitle>
+            <CardDescription>Your tax filing schedule</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* PAYE & UIF Group */}
+            <div>
+              <div className="mb-3 border-b pb-2">
+                <h3 className="text-sm font-semibold text-muted-foreground">PAYE & UIF — Monthly</h3>
+              </div>
+              <div className="space-y-2">
+                {/* PAYE Row - Clickable */}
+                <button
+                  onClick={() => navigate('/ceo/payroll')}
+                  className="w-full rounded-lg border border-input bg-background p-4 text-left transition-all hover:border-primary hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  title="Click to view payslips"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="font-medium">PAYE (Pay As You Earn)</p>
+                      <p className="text-sm text-muted-foreground">March 2026</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="text-right">
+                        <p className="font-semibold">{formatCurrency(8450)}</p>
+                        <Badge variant="default" className="bg-success">Paid</Badge>
+                      </div>
+                      <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                  </div>
+                </button>
+
+                {/* UIF Row - Not Clickable */}
+                <div className="rounded-lg border border-input p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="font-medium">UIF (Unemployment Insurance Fund)</p>
+                      <p className="text-sm text-muted-foreground">March 2026</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">{formatCurrency(212)}</p>
+                      <Badge variant="default" className="bg-success">Paid</Badge>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* VAT Group */}
+            <div>
+              <div className="mb-3 border-b pb-2">
+                <h3 className="text-sm font-semibold text-muted-foreground">VAT — Bi-Monthly</h3>
+              </div>
+              <div className="space-y-2">
+                {/* VAT Output */}
+                <div className="rounded-lg border border-input p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="font-medium">VAT Output (Sales)</p>
+                      <p className="text-sm text-muted-foreground">Jan–Feb 2026</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">{formatCurrency(24360)}</p>
+                      <Badge variant="default" className="bg-success">Paid</Badge>
+                    </div>
+                  </div>
+                </div>
+
+                {/* VAT Input */}
+                <div className="rounded-lg border border-input p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="font-medium">VAT Input (Expenses)</p>
+                      <p className="text-sm text-muted-foreground">Jan–Feb 2026</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">{formatCurrency(11200)}</p>
+                      <Badge variant="default" className="bg-success">Paid</Badge>
+                    </div>
+                  </div>
+                </div>
+
+                {/* VAT Payable */}
+                <div className="rounded-lg border border-input bg-warning/5 p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="font-medium">VAT Payable (Output minus Input)</p>
+                      <p className="text-sm text-muted-foreground">Jan–Feb 2026</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold text-warning">{formatCurrency(13160)}</p>
+                      <Badge variant="secondary" className="bg-warning text-warning-foreground">Due</Badge>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Income Tax Group */}
+            <div>
+              <div className="mb-3 border-b pb-2">
+                <h3 className="text-sm font-semibold text-muted-foreground">Income Tax — Annual</h3>
+              </div>
+              <div className="space-y-2">
+                {/* Provisional Tax */}
+                <div className="rounded-lg border border-input p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="font-medium">Provisional Tax (Period 2)</p>
+                      <p className="text-sm text-muted-foreground">Due 28 Feb 2026</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">{formatCurrency(32200)}</p>
+                      <Badge variant="default" className="bg-success">Paid</Badge>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Final Tax */}
+                <div className="rounded-lg border border-input bg-destructive/5 p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="font-medium">Final Tax (IT14 / Assessment)</p>
+                      <p className="text-sm text-muted-foreground">Due 31 Mar 2026</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold text-destructive">{formatCurrency(8114)}</p>
+                      <Badge variant="destructive">Action Required</Badge>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
