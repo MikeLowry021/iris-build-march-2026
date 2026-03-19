@@ -21,8 +21,8 @@ import { CirclePlay as PlayCircle, Clock, CircleCheck as CheckCircle, CircleAler
 import { useAuth } from '@/contexts/AuthContext';
 
 const stats = [
-  { label: 'Fieldwork in Progress', value: 2, icon: PlayCircle, color: 'text-blue-600', bg: 'bg-blue-500/10' },
-  { label: 'Awaiting Opinion', value: 1, icon: Clock, color: 'text-amber-600', bg: 'bg-amber-500/10' },
+  { label: 'Fieldwork in Progress', value: 2, icon: PlayCircle, color: 'text-slate-700', bg: 'bg-slate-50' },
+  { label: 'Awaiting Opinion', value: 1, icon: Clock, color: 'text-slate-700', bg: 'bg-slate-50' },
   { label: 'Opinions Issued', value: 4, icon: CheckCircle, color: 'text-green-600', bg: 'bg-green-500/10' },
   { label: 'Queries Outstanding', value: 3, icon: AlertCircle, color: 'text-red-600', bg: 'bg-red-500/10' },
 ];
@@ -33,7 +33,7 @@ const engagements = [
     period: 'Dec 2025',
     auditType: 'Statutory Audit',
     status: 'Fieldwork in Progress',
-    statusStyle: 'bg-blue-600 text-white border-0',
+    statusStyle: 'bg-slate-700 text-white border-0',
     pis: 'PIS: 350',
   },
   {
@@ -41,7 +41,7 @@ const engagements = [
     period: 'Feb 2026',
     auditType: 'Statutory Audit',
     status: 'Awaiting Opinion',
-    statusStyle: 'bg-amber-500 text-white border-0',
+    statusStyle: 'bg-slate-500 text-white border-0',
     pis: 'PIS: 290',
   },
   {
@@ -61,7 +61,12 @@ export default function AuditorDashboard() {
     <DashboardLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Auditor Dashboard</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold tracking-tight">Auditor Dashboard</h1>
+            <span className="inline-flex items-center rounded-full bg-slate-50 border border-slate-300 px-2.5 py-0.5 text-xs font-medium text-slate-700">
+              Auditor Portal
+            </span>
+          </div>
           <p className="text-sm text-muted-foreground">
             Welcome back, {user?.name?.split(' ').slice(0, 3).join(' ')} — your active audit engagements
           </p>

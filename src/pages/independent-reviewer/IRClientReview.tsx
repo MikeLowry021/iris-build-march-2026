@@ -34,10 +34,34 @@ const analyticalRows = [
 ];
 
 const ratios = [
-  { label: 'Gross Profit Margin', value: '36.96%', benchmark: '30–40%', verdict: 'Within range' },
-  { label: 'Current Ratio', value: '2.04:1', benchmark: '>1.5', verdict: 'Adequate' },
-  { label: 'Debt-to-Equity', value: '0.78', benchmark: '<1.5', verdict: 'Low leverage' },
-  { label: 'Return on Equity', value: '17.89%', benchmark: '>10%', verdict: 'Strong' },
+  {
+    label: 'Gross Profit Margin',
+    value: '36.96%',
+    benchmark: '30–40%',
+    verdict: 'Within range',
+    explanation: 'Revenue remaining after cost of goods sold. Higher % = stronger core trading profitability.',
+  },
+  {
+    label: 'Current Ratio',
+    value: '2.04:1',
+    benchmark: '>1.5',
+    verdict: 'Adequate',
+    explanation: 'Measures ability to pay short-term obligations. Above 1.5 is healthy; below 1.0 is a warning.',
+  },
+  {
+    label: 'Debt-to-Equity',
+    value: '0.78',
+    benchmark: '<1.5',
+    verdict: 'Low leverage',
+    explanation: 'How much the business owes vs. what owners own. Below 2.0 is generally acceptable.',
+  },
+  {
+    label: 'Return on Equity',
+    value: '17.89%',
+    benchmark: '>10%',
+    verdict: 'Strong',
+    explanation: 'Profit generated per rand of shareholder equity. Higher = better use of owner investment.',
+  },
 ];
 
 const enquiryQuestions = [
@@ -160,9 +184,10 @@ export default function IRClientReview() {
           <CardContent>
             <div className="grid gap-4 sm:grid-cols-2">
               {ratios.map((r) => (
-                <div key={r.label} className="rounded-lg border p-4 space-y-1.5">
+                <div key={r.label} className="rounded-lg border border-amber-200 bg-amber-50/40 p-4 space-y-1.5">
                   <p className="text-sm font-medium text-muted-foreground">{r.label}</p>
                   <p className="text-2xl font-bold">{r.value}</p>
+                  <p className="text-xs text-muted-foreground">{r.explanation}</p>
                   <div className="flex items-center gap-2 text-xs">
                     <span className="text-muted-foreground">Benchmark: {r.benchmark}</span>
                     <Badge className="bg-green-600 text-white border-0 text-xs">

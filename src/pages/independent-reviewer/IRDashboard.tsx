@@ -21,7 +21,7 @@ import { Clock, CirclePlay as PlayCircle, CircleCheck as CheckCircle, CircleAler
 import { useAuth } from '@/contexts/AuthContext';
 
 const stats = [
-  { label: 'Awaiting Review', value: 3, icon: Clock, color: 'text-amber-600', bg: 'bg-amber-500/10' },
+  { label: 'Awaiting Review', value: 3, icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50' },
   { label: 'In Progress', value: 1, icon: PlayCircle, color: 'text-blue-600', bg: 'bg-blue-500/10' },
   { label: 'Signed Off', value: 7, icon: CheckCircle, color: 'text-green-600', bg: 'bg-green-500/10' },
   { label: 'Queries Raised', value: 2, icon: AlertCircle, color: 'text-red-600', bg: 'bg-red-500/10' },
@@ -34,7 +34,7 @@ const recentActivity = [
     submittedBy: 'T. Dlamini (CA)SA',
     submittedDate: '03 Mar 2026',
     status: 'Awaiting Review',
-    statusStyle: 'bg-amber-500 text-white border-0',
+    statusStyle: 'bg-amber-600 text-white border-0',
   },
   {
     client: 'Khumalo Retail CC',
@@ -61,7 +61,12 @@ export default function IRDashboard() {
     <DashboardLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Independent Reviewer Dashboard</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold tracking-tight">Independent Reviewer Dashboard</h1>
+            <span className="inline-flex items-center rounded-full bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-xs font-medium text-amber-600">
+              IR Portal
+            </span>
+          </div>
           <p className="text-sm text-muted-foreground">
             Welcome back, {user?.name?.split(' ').slice(0, 2).join(' ')} — here is your review workload
           </p>

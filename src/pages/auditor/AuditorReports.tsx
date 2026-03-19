@@ -6,15 +6,8 @@
 
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { Eye, Download } from 'lucide-react';
 
 const issuedOpinions = [
@@ -36,6 +29,12 @@ const issuedOpinions = [
   },
 ];
 
+const todayFormatted = new Date().toLocaleDateString('en-ZA', {
+  day: '2-digit',
+  month: 'long',
+  year: 'numeric',
+});
+
 export default function AuditorReports() {
   return (
     <DashboardLayout>
@@ -47,50 +46,76 @@ export default function AuditorReports() {
           </p>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Issued Opinions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Client</TableHead>
-                  <TableHead>Period</TableHead>
-                  <TableHead>Audit Type</TableHead>
-                  <TableHead>Opinion Type</TableHead>
-                  <TableHead>Date Issued</TableHead>
-                  <TableHead>IRBA Ref</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {issuedOpinions.map((row) => (
-                  <TableRow key={row.irbaRef}>
-                    <TableCell className="font-medium">{row.client}</TableCell>
-                    <TableCell>{row.period}</TableCell>
-                    <TableCell>{row.auditType}</TableCell>
-                    <TableCell>{row.opinionType}</TableCell>
-                    <TableCell>{row.dateIssued}</TableCell>
-                    <TableCell className="font-mono text-xs">{row.irbaRef}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex gap-2 justify-end">
-                        <Button size="sm" variant="outline" disabled>
-                          <Eye className="h-3.5 w-3.5 mr-1.5" />
-                          View
-                        </Button>
-                        <Button size="sm" variant="outline" disabled>
-                          <Download className="h-3.5 w-3.5 mr-1.5" />
-                          Download
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+        <div className="space-y-4">
+          {issuedOpinions.map((row) => (
+            <Card key={row.irbaRef}>
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <CardTitle className="text-base">{row.client}</CardTitle>
+                    <p className="text-sm text-muted-foreground mt-0.5">
+                      Period: {row.period} &bull; IRBA Ref:{' '}
+                      <span className="font-mono">{row.irbaRef}</span>
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <Badge className="bg-slate-50 border border-slate-300 text-slate-700 text-xs">
+                      {row.auditType}
+                    </Badge>
+                    <Badge className="bg-green-600 text-white border-0 text-xs">
+                      {row.opinionType}
+                    </Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" disabled>
+                    <Eye className="h-3.5 w-3.5 mr-1.5" />
+                    View
+                  </Button>
+                  <Button size="sm" variant="outline" disabled>
+                    <Download className="h-3.5 w-3.5 mr-1.5" />
+                    Download
+                  </Button>
+                </div>
+
+                {/* Signature Block */}
+                <div className="border-t-2 border-dashed border-slate-300 pt-4 space-y-3">
+                  <span className="inline-flex items-center rounded-full bg-slate-50 border border-slate-300 px-2.5 py-0.5 text-xs font-semibold text-slate-700 tracking-wide uppercase">
+                    Auditor Sign-Off
+                  </span>
+                  <div>
+                    <div className="border-b border-gray-300 w-48 mb-1 h-6" />
+                    <p className="text-sm text-muted-foreground">Signature</p>
+                  </div>
+                  <div className="grid gap-1 text-sm">
+                    <p>
+                      <span className="text-muted-foreground">Name: </span>
+                      Jerome van der Berg
+                    </p>
+                    <p>
+                      <span className="text-muted-foreground">Designation: </span>
+                      Registered Auditor
+                    </p>
+                    <p>
+                      <span className="text-muted-foreground">Practice No.: </span>
+                      PR-2024-00891
+                    </p>
+                    <p>
+                      <span className="text-muted-foreground">Date: </span>
+                      {todayFormatted}
+                    </p>
+                    <p>
+                      <span className="text-muted-foreground">Firm: </span>
+                      Iris Audit &amp; Assurance
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
 
         <p className="text-xs text-muted-foreground text-center pb-2">
           Download functionality will be enabled in the production build.
