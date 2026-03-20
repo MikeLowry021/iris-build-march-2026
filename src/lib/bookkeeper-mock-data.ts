@@ -18,6 +18,7 @@ export const mockBookkeeperClients: BookkeeperClient[] = [
     lastActivity: '2 hours ago',
     pendingTransactions: 12,
     draftReports: 1,
+    assignedBookkeeper: 'Sarah Botha',
   },
   {
     id: '2',
@@ -27,6 +28,7 @@ export const mockBookkeeperClients: BookkeeperClient[] = [
     lastActivity: '1 day ago',
     pendingTransactions: 8,
     draftReports: 0,
+    assignedBookkeeper: 'Sarah Botha',
   },
   {
     id: '3',
@@ -36,6 +38,7 @@ export const mockBookkeeperClients: BookkeeperClient[] = [
     lastActivity: '3 days ago',
     pendingTransactions: 0,
     draftReports: 1,
+    assignedBookkeeper: 'Thabo Nkosi',
   },
   {
     id: '5',
@@ -45,6 +48,7 @@ export const mockBookkeeperClients: BookkeeperClient[] = [
     lastActivity: '5 hours ago',
     pendingTransactions: 5,
     draftReports: 0,
+    assignedBookkeeper: 'Thabo Nkosi',
   },
   {
     id: '6',
@@ -54,6 +58,7 @@ export const mockBookkeeperClients: BookkeeperClient[] = [
     lastActivity: '1 hour ago',
     pendingTransactions: 0,
     draftReports: 0,
+    assignedBookkeeper: 'Sarah Botha',
   },
 ];
 

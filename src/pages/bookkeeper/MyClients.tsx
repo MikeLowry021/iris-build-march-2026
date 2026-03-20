@@ -13,18 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Users,
-  Search,
-  Clock,
-  Receipt,
-  FileText,
-  CheckCircle,
-  AlertCircle,
-  ArrowRight,
-  Calendar,
-  Building2,
-} from 'lucide-react';
+import { Users, Search, Clock, Receipt, FileText, CircleCheck as CheckCircle, CircleAlert as AlertCircle, ArrowRight, Calendar, Building2, User } from 'lucide-react';
 import { mockBookkeeperClients } from '@/lib/bookkeeper-mock-data';
 import { BookkeeperClientStatus } from '@/lib/bookkeeper-types';
 import { cn } from '@/lib/utils';
@@ -41,6 +30,7 @@ interface ClientDetail {
   lastReviewStatus: 'approved' | 'pending' | 'changes_requested';
   progress: number;
   industry: string;
+  assignedBookkeeper: string;
 }
 
 // Extended client data with more details
@@ -57,6 +47,7 @@ const clientDetails: ClientDetail[] = [
     lastReviewStatus: 'pending',
     progress: 65,
     industry: 'Retail',
+    assignedBookkeeper: 'Sarah Botha',
   },
   {
     id: '2',
@@ -70,6 +61,7 @@ const clientDetails: ClientDetail[] = [
     lastReviewStatus: 'changes_requested',
     progress: 30,
     industry: 'Technology',
+    assignedBookkeeper: 'Sarah Botha',
   },
   {
     id: '3',
@@ -83,6 +75,7 @@ const clientDetails: ClientDetail[] = [
     lastReviewStatus: 'approved',
     progress: 100,
     industry: 'Import/Export',
+    assignedBookkeeper: 'Thabo Nkosi',
   },
   {
     id: '5',
@@ -96,6 +89,7 @@ const clientDetails: ClientDetail[] = [
     lastReviewStatus: 'approved',
     progress: 45,
     industry: 'Services',
+    assignedBookkeeper: 'Thabo Nkosi',
   },
   {
     id: '6',
@@ -109,6 +103,7 @@ const clientDetails: ClientDetail[] = [
     lastReviewStatus: 'pending',
     progress: 80,
     industry: 'Engineering',
+    assignedBookkeeper: 'Sarah Botha',
   },
 ];
 
@@ -284,6 +279,11 @@ export default function MyClients() {
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground">{client.name}</p>
+                        <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+                          <span className="text-xs font-medium">Assigned Bookkeeper:</span>
+                          <User className="h-3 w-3" />
+                          <span>{client.assignedBookkeeper}</span>
+                        </div>
                         <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <Clock className="h-3 w-3" />
