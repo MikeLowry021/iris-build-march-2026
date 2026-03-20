@@ -1,12 +1,10 @@
-// NOTE (2026-03-04):
-// Independent Reviewer profile — mock data only.
-// Review checklists and sign-off confirmation are UI simulations.
-// Real digital sign-off, ISRE 2400 compliance workflows, and
-// document storage are planned for the production phase.
+// NOTE (2026-03-20):
+// IR Reports — removed duplicate financials, replaced with formal report cards.
 
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -34,6 +32,39 @@ const signedOffReports = [
   },
 ];
 
+const formalReports = [
+  {
+    id: 'fr1',
+    title: 'Independent Review Report',
+    client: 'Mokwena Trading',
+    period: 'Year ended 28 February 2026',
+    status: 'Draft',
+    statusColor: 'bg-amber-100 text-amber-700',
+    preparedBy: 'Jerome van der Berg',
+    date: '15 March 2026',
+  },
+  {
+    id: 'fr2',
+    title: 'Management Letter',
+    client: 'Mokwena Trading',
+    period: 'Year ended 28 February 2026',
+    status: 'Pending Sign-off',
+    statusColor: 'bg-orange-100 text-orange-700',
+    preparedBy: 'Jerome van der Berg',
+    date: '16 March 2026',
+  },
+  {
+    id: 'fr3',
+    title: 'Agreed-Upon Procedures Report',
+    client: 'Mokwena Trading',
+    period: 'Q3 2025',
+    status: 'Issued',
+    statusColor: 'bg-green-100 text-green-700',
+    preparedBy: 'Jerome van der Berg',
+    date: '10 January 2026',
+  },
+];
+
 export default function IRReports() {
   return (
     <DashboardLayout>
@@ -43,6 +74,39 @@ export default function IRReports() {
           <p className="text-sm text-muted-foreground">
             Signed-off financial statements and review documentation
           </p>
+        </div>
+
+        <div>
+          <h2 className="text-lg font-semibold mb-4">Report Documents</h2>
+          <div className="grid gap-4 md:grid-cols-3">
+            {formalReports.map((report) => (
+              <Card key={report.id}>
+                <CardContent className="pt-6 space-y-4">
+                  <div className="space-y-2">
+                    <h3 className="font-semibold text-sm">{report.title} — {report.client}</h3>
+                    <p className="text-xs text-muted-foreground">{report.period}</p>
+                  </div>
+                  <Badge className={report.statusColor} variant="secondary">
+                    {report.status}
+                  </Badge>
+                  <div className="text-xs text-muted-foreground space-y-1">
+                    <p>Prepared by: {report.preparedBy}</p>
+                    <p>Date: {report.date}</p>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled
+                    title="Available in production build"
+                    className="w-full"
+                  >
+                    <Eye className="h-3.5 w-3.5 mr-1.5" />
+                    View Report
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
 
         <Card>
